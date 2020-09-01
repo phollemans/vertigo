@@ -1,0 +1,63 @@
+Vertigo Beta, version 0.5
+Copyright (c) 2020 National Oceanic and Atmospheric Administration
+All rights reserved
+Author: Peter Hollemans
+
+1. Introduction
+
+Vertigo Beta is a technology demonstration of the JavaFX client application
+platform for desktop, and specifically its ability to perform 3D rendering.
+Vertigo is designed to display a selection of earth science datasets provided
+by the NOAA CoastWatch program (https://coastwatch.noaa.gov).  Datasets are
+accessed in real-time from NOAA data servers.
+
+The Vertigo project has a number of goals:
+
+- To evaluate the JavaFX graphics and object models for inclusion into the
+CoastWatch Data Analysis Tool (CDAT), or as an offshoot application with
+CDAT-like features.
+- To experiment with visualization of remote network datasets with an eye for
+future cloud data servers.
+- To act as a simple interface for the ERDDAP and THREDDS data services,
+allowing for easy dataset discovery, visualization, and possibly download.
+
+2. Usage
+
+Vertigo Beta launches with a default configuration that shows a set of buttons
+on the right that select a dataset of interest, and on the left that shift to
+an area of interest.  The globe shows the most recent data available for the
+dataset.  The mouse or trackpad is used to control the view:
+
+- Scroll up to zoom in, or down to zoom out
+- Click and drag on the globe to rotate it
+- Double-click the left mouse button to zoom in and rotate to that location
+- Double-click the right mouse button to zoom out and rotate to that location
+
+There are also several keyboard shortcuts:
+
+- The arrow keys rotate the globe, SHIFT + arrow key rotates faster
+- Press A to zoom in
+- Press Z to zoom out
+
+3. Future Releases
+
+Depending on interest and development time available, Vertigo may be expanded
+to be a more fully functional data viewer for earth science data.  As it is,
+Vertigo uses the Java NetCDF library to access datasets over the network.
+Theoretically, any dataset available over an OpenDAP protocol on a THREDDS or
+ERDDAP server could be accessed by Vertigo.  Vertigo can also access local
+NetCDF datasets.  Some initial improvements could include:
+
+- Display of a color bar legend and cursor position
+- Ability to select date / time stamp within the dataset
+- Ability for user to specify their own datasets and color mappings
+- Saving and loading of configurations as Vertigo "projects"
+- Server connection status and error indicators
+- Improvements in network access speed
+
+4. Feedback
+
+Please direct feedback to coastwatch.info@noaa.gov.
+
+--
+Last updated: Aug 14, 2020
