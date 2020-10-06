@@ -14,9 +14,9 @@ http://terrenus.ca/download/vertigo/beta/.
 
 # Tutorial
 
-The [Vertigo Beta Install and Demo](https://youtu.be/Iq-7X_PFBO8) introduces Vertigo 
+The [Vertigo Beta Install and Demo](https://youtu.be/Iq-7X_PFBO8) video introduces Vertigo 
 Beta with a background on its development and future directions, and example installation
-procedure with video.
+procedure and usage.
 
 # Development
 
