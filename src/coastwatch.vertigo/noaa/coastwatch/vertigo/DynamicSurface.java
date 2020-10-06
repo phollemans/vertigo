@@ -34,8 +34,9 @@ import javafx.application.Platform;
  * out uninitialized with nothing to view.  When the camera position property
  * is set for the first time and the surface set to active mode, the facets are
  * generated in a background process and then pushed to a consumer function
- * supplied from the caller.  Subsequent updates to the facets will take the
- * form of an update to the facet mesh view.
+ * supplied from the caller.  Subsequent updates to the facets take the
+ * form of an update to the facet mesh view, either directly when the update is
+ * available, or packaged for an update consumer if specified.
  *
  * @see Facet
  *
