@@ -76,6 +76,7 @@
 		E93BA45924FDC974009455F1 /* earth2.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = earth2.icns; sourceTree = "<group>"; };
 		E93BA45A24FDC974009455F1 /* earth2.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = earth2.ico; sourceTree = "<group>"; };
 		E93BA45B24FDC974009455F1 /* vertigo.install4j */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vertigo.install4j; sourceTree = "<group>"; };
+		E950EFDA252C1FEC00C186CE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E959983724E1EC8100C87F6D /* question@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "question@2x.png"; sourceTree = "<group>"; };
 		E959983824E1EC8200C87F6D /* question.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = question.png; sourceTree = "<group>"; };
 		E959983924E206CC00C87F6D /* help.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = help.txt; sourceTree = "<group>"; };
@@ -128,6 +129,7 @@
 		E93B71A824AD2145001CDBC4 = {
 			isa = PBXGroup;
 			children = (
+				E950EFDA252C1FEC00C186CE /* README.md */,
 				E93B744124AD2232001CDBC4 /* build.xml */,
 				E93B744A24AD2473001CDBC4 /* logging.properties */,
 				E93BA45B24FDC974009455F1 /* vertigo.install4j */,
