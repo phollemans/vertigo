@@ -21,7 +21,7 @@ import javafx.scene.paint.Color;
  */
 public class PaletteBuilder extends BaseProjectObjectBuilder {
 
-  private static final String TYPE = "palette";
+  private static final String TYPE = "Palette";
   
   /////////////////////////////////////////////////////////////////
 
@@ -46,19 +46,20 @@ public class PaletteBuilder extends BaseProjectObjectBuilder {
   /////////////////////////////////////////////////////////////////
 
   @Override
-  public Object getObject() {
+  public ProjectObject getObject() {
 
     String name = (String) require ("name");
-    List<Integer> colorList = propertyMap.keySet().stream()
+
+    List<Integer> colorList = properties().stream()
       .filter (key -> key.matches ("color[0-9]+"))
       .map (key -> Integer.parseInt (key.substring (5)))
       .collect (Collectors.toCollection (TreeSet::new))
       .stream()
-      .map (key -> colorToRGB ((Color) propertyMap.get ("color" + key)))
+      .map (key -> colorToRGB ((Color) require ("color" + key)))
       .collect (Collectors.toList());
-    Object obj = Palette.getInstance (name, colorList);
+    ProjectObject obj = Palette.getInstance (name, colorList);
 
-    propertyMap.clear();
+    complete (obj);
     return (obj);
 
   } // getObject

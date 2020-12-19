@@ -58,6 +58,9 @@ public class WebMapDataSource implements ImageDataSource<int[]> {
   /** The set of tiles current being retrieved. */
   private Set<WebMapTileKey> tileRetrievingSet;
 
+  /** The set of tiles that were missing when retrieved. */
+  private Set<WebMapTileKey> tileMissingSet;
+
   /////////////////////////////////////////////////////////////////
 
   /**
@@ -88,6 +91,7 @@ public class WebMapDataSource implements ImageDataSource<int[]> {
 
     tileImageCache = new HashMap<>();
     tileRetrievingSet = new HashSet<>();
+    tileMissingSet = new HashSet<>();
 
   } // WebMapDataSource
 
@@ -239,15 +243,44 @@ public class WebMapDataSource implements ImageDataSource<int[]> {
   /**
    * Tests the server connection for this data source.
    *
-   * @return true if the server returns data or false if not.
+   * @throws Exception if an error occurred in testing.
    */
-  public boolean testServer () {
+  public void testServer () throws Exception {
 
-    var image1 = retrieve (new WebMapTileKey (0, 0, 0));
-    var image2 = retrieve (new WebMapTileKey (0, 1, 0));
-    return (image1 != null || image2 != null);
+    var image1 = retrieveWithException (new WebMapTileKey (0, 0, 0));
+    var image2 = retrieveWithException (new WebMapTileKey (0, 1, 0));
 
   } // testServer
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Retrieves a web map image using the specified key.
+   *
+   * @param key the key that specifies the level, x, and y values.
+   *
+   * @return the image.
+   *
+   * @throws Exception if an exception occurred when retrieving the image.
+   *
+   * @since 0.6
+   */
+  private Image retrieveWithException (
+    WebMapTileKey key
+  ) throws Exception {
+
+    String tileURL = urlPattern;
+    tileURL = tileURL.replaceAll ("%L", Integer.toString (key.level));
+    tileURL = tileURL.replaceAll ("%l", Integer.toString (key.level + 1));
+    tileURL = tileURL.replaceAll ("%x", Integer.toString (key.tileX));
+    tileURL = tileURL.replaceAll ("%y", Integer.toString (key.tileY));
+    tileURL = tileURL.replaceAll ("%i", Integer.toString ((1 << key.level) - 1 - key.tileY));
+    Image image = new Image (tileURL);
+    if (image.isError()) throw image.getException();
+
+    return (image);
+
+  } // retrieveWithException
 
   /////////////////////////////////////////////////////////////////
 
@@ -261,6 +294,9 @@ public class WebMapDataSource implements ImageDataSource<int[]> {
   private Image retrieve (
     WebMapTileKey key
   ) {
+
+    // Check first if the tile has previously been found missing
+    if (tileMissingSet.contains (key)) return (null);
   
     String tileURL = urlPattern;
     tileURL = tileURL.replaceAll ("%L", Integer.toString (key.level));
@@ -275,8 +311,10 @@ public class WebMapDataSource implements ImageDataSource<int[]> {
       LOGGER.finer ("Retrieved web map image with key " + key + ", URL " + tileURL);
     } // try
     catch (Exception e) {
-      if (e instanceof FileNotFoundException)
+      if (e instanceof FileNotFoundException) {
         LOGGER.warning ("Web map image file not found for URL " + tileURL);
+        tileMissingSet.add (key);
+      } // if
       else
         LOGGER.log (Level.WARNING, "Web map image retrieval failed for URL " + tileURL, e);
       image = null;
@@ -397,7 +435,8 @@ public class WebMapDataSource implements ImageDataSource<int[]> {
           if (reader != null)
             colorData[index] = reader.getArgb (sourceXCoord[x], sourceYCoord[y]);
           else
-            colorData[index] = 0xff000000; // TODO: Black or transparent?
+//            colorData[index] = 0xff000000; // TODO: Black or transparent?
+            colorData[index] = 0x00000000; // TODO: Black or transparent?
           index++;
         } // for
         if (isTrue (cancelled)) break;

@@ -1,0 +1,32 @@
+body {
+  font-family: sans-serif;
+  margin: 8px 32px 8px 8px;
+}
+
+code {
+  white-space: nowrap;
+  background: #E1E1E1;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  padding: 0 .2rem;
+  margin: 0 .1rem;
+  font: 0.9em/normal 'Roboto Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+
+/*th, td {*/
+/*  padding: 5px;*/
+/*}*/
+
+/*th {*/
+/*  background: #E1E1E1;*/
+/*}*/
+/**/
+
+table, th, td {
+  font-size: 0.9em;
+}
+
+/**/
+/*table {*/
+/*  border-collapse: collapse;*/
+/*}*/

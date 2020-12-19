@@ -18,8 +18,6 @@ import java.util.function.DoubleToIntFunction;
  */
 public class DoubleToColorConverter implements DataConverter<double[], int[]> {
 
-  private static final double LOG10 = Math.log (10);
-
   // Variables
   // ---------
   
@@ -28,6 +26,31 @@ public class DoubleToColorConverter implements DataConverter<double[], int[]> {
 
   /** The function that maps double values to integer indices in the colormap. */
   private DoubleToIntFunction function;
+
+  /** The domain bounds of the function. */
+  private double min, max;
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the minimum data value in the mapping function domain.
+   *
+   * @return the minimum value.
+   *
+   * @since 0.6
+   */
+  public double getMin() { return (min); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the maximum data value in the mapping function domain.
+   *
+   * @return the maximum value.
+   *
+   * @since 0.6
+   */
+  public double getMax() { return (max); }
 
   /////////////////////////////////////////////////////////////////
 
@@ -60,15 +83,10 @@ public class DoubleToColorConverter implements DataConverter<double[], int[]> {
       return (intValue);
     };
   
-    var converter = new DoubleToColorConverter (map, func);
+    var converter = new DoubleToColorConverter (min, max, func, map);
     return (converter);
 
   } // linearInstance
-
-  /////////////////////////////////////////////////////////////////
-
-  /** Computes the log base 10 of a number. */
-  private static double log10 (double value) { return (Math.log (value) / LOG10); }
 
   /////////////////////////////////////////////////////////////////
 
@@ -87,15 +105,15 @@ public class DoubleToColorConverter implements DataConverter<double[], int[]> {
   ) {
   
     int colors = map.length-1;
-    double slope = 1.0 / (log10 (max) - log10 (min));
-    double inter = -slope * log10 (min);
+    double slope = 1.0 / (Math.log10 (max) - Math.log10 (min));
+    double inter = -slope * Math.log10 (min);
     DoubleToIntFunction func = value -> {
       int intValue;
       if (Double.isNaN (value)) {
         intValue = 0;
       } // if
       else {
-        double norm = slope*log10 (value) + inter;
+        double norm = slope*Math.log10 (value) + inter;
         if (norm < 0) norm = 0;
         else if (norm > 1) norm = 1;
         intValue = (int) Math.round (norm * (colors-1)) + 1;
@@ -103,7 +121,7 @@ public class DoubleToColorConverter implements DataConverter<double[], int[]> {
       return (intValue);
     };
 
-    var converter = new DoubleToColorConverter (map, func);
+    var converter = new DoubleToColorConverter (min, max, func, map);
     return (converter);
 
   } // logInstance
@@ -113,15 +131,21 @@ public class DoubleToColorConverter implements DataConverter<double[], int[]> {
   /**
    * Creates a new converter.
    *
+   * @param min the function domain minimum.
+   * @param max the function domain maximum.
+   * @param function the function that maps double values to integer indices in the colormap.
    * @param colorMap the colormap that contains the colors to use for image
    * pixels as ARGB values.
-   * @param function the function that maps double values to integer indices in the colormap.
    */
   public DoubleToColorConverter (
-    int[] colorMap,
-    DoubleToIntFunction function
+    double min,
+    double max,
+    DoubleToIntFunction function,
+    int[] colorMap
   ) {
   
+    this.min = min;
+    this.max = max;
     this.colorMap = colorMap;
     this.function = function;
   

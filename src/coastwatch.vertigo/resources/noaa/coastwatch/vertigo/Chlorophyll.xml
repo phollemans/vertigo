@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-
-<palette name="NCCOS-chla" length="251">
+<palette name="NCCOS-chla" length="250">
 
 <color r="72" g="24" b="106" />
 <color r="72" g="25" b="107" />
@@ -253,5 +252,4 @@
 <color r="181" g="0" b="0" />
 <color r="175" g="0" b="0" />
 <color r="170" g="0" b="0" />
-<color r="130" g="0" b="13" />
 </palette>

@@ -56,7 +56,7 @@ public class NetCDFDataset implements Dataset, Closeable {
   /** The NetCDF dataset, possibly remote. */
   private String datasetName;
   
-  /** The translator for geographic (lat,lon) to iamge (x,y,z). */
+  /** The translator for geographic (lat,lon) to image (x,y,z). */
   private GeoCoordinateTranslator trans;
 
   /** The cache of available handles to use for operations. */
@@ -319,6 +319,29 @@ public class NetCDFDataset implements Dataset, Closeable {
   /////////////////////////////////////////////////////////////////
 
   @Override
+  public String getLevelUnits (
+    String varName
+  ) throws IOException {
+
+    String units = null;
+    try (DatasetHandle handle = acquireHandle (null)) {
+
+      GridDatatype grid = handle.gridDataset.findGridDatatype (varName);
+      GridCoordSystem system = grid.getCoordinateSystem();
+      CoordinateAxis1D axis = system.getVerticalAxis();
+      if (axis != null) {
+        units = axis.getUnitsString();
+      } // if
+
+    } // try
+  
+    return (units);
+  
+  } // getLevelUnits
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
   public int[] getDimensions (
     String varName
   ) throws IOException {
@@ -364,6 +387,32 @@ public class NetCDFDataset implements Dataset, Closeable {
     return (attMap);
 
   } // getAttributes
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public Map<String, Object> getGlobalAttributes () throws IOException {
+  
+    Map<String, Object> attMap = new LinkedHashMap<>();
+    try (DatasetHandle handle = acquireHandle (null)) {
+
+      List<Attribute> attList = handle.ncDataset.getGlobalAttributes();
+      for (var att : attList) {
+        Object value;
+        if (att.isArray())
+          value = att.getValues().copyTo1DJavaArray();
+        else if (att.isString())
+          value = att.getStringValue();
+        else
+          value = att.getNumericValue();
+        attMap.put (att.getShortName(), value);
+      } // for
+      
+    } // try
+    
+    return (attMap);
+  
+  } // getGlobalAttributes
 
   /////////////////////////////////////////////////////////////////
 

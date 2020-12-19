@@ -19,20 +19,23 @@ import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.input.PickResult;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+
 import javafx.scene.AmbientLight;
 import javafx.scene.PointLight;
+
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Sphere;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.DrawMode;
+
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.paint.Color;
 
 import javafx.geometry.Point3D;
 import javafx.geometry.BoundingBox;
@@ -46,6 +49,11 @@ import javafx.animation.Interpolator;
 import javafx.util.Duration;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
 
 import static noaa.coastwatch.vertigo.SphereFunctions.THETA;
 import static noaa.coastwatch.vertigo.SphereFunctions.PHI;
@@ -65,18 +73,17 @@ public class WorldController {
   // ---------
 
   private static final int POSITION_SHIFT_DURATION = 1500;
+  private static final int SHIFT_ANGLE = 60;
   private static final int CAMERA_ZOOM_DURATION = POSITION_SHIFT_DURATION;
   private static final int SCENE_CHANGES_PER_PULSE = 2;
 
+  private static final double BAACKGROUND_VIEW_ORDER = 20;
   private static final double BASE_VIEW_ORDER = 10;
   private static final double USER_VIEW_ORDER = 5;
   private static final double FLOAT_VIEW_ORDER = 1;
 
   // Variables
   // ---------
-
-  /** The singleton instance of the controller. */
-  private static WorldController instance;
 
   /** The view used for display. */
   private WorldView view;
@@ -111,6 +118,38 @@ public class WorldController {
   /** The queue for accumlating and performing scene graph changes. */
   private ConcurrentLinkedQueue<Runnable> sceneGraphChangeQueue;
 
+  /** The intersection point between the view cursor and globe (possibly null). */
+  private ObjectProperty<Point3D> globeIntersectProp;
+
+  /** The coordinate translator between geographic and model coordinates (possibly null). */
+  private ObjectProperty<GeoCoordinateTranslator> coordTransProp;
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the property that holds the intersection point between the view
+   * cursor and the globe surface.  The intersection point may be null when
+   * the view cursor is not intersecting the globe.
+   *
+   * @return the globe intersection property.
+   *
+   * @since 0.6
+   */
+  public ReadOnlyObjectProperty<Point3D> globeIntersectProperty() { return (globeIntersectProp); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the property that holds the translator between geographic and
+   * model coordinates for the world.  A default translator property is
+   * initially created based on spherical coordinates.
+   *
+   * @return the coordinate translator property.
+   *
+   * @since 0.6
+   */
+  public ObjectProperty<GeoCoordinateTranslator> coordTransProperty() { return (coordTransProp); }
+
   /////////////////////////////////////////////////////////////////
 
   /**
@@ -131,28 +170,16 @@ public class WorldController {
   
   /////////////////////////////////////////////////////////////////
 
-  /**
-   * Gets the singleton instance of the controller.
-   *
-   * @return the singleton instance.
-   */
-  public static WorldController getInstance() {
-  
-    if (instance == null) instance = new WorldController();
-    return (instance);
-
-  } // getInstance
-
-  /////////////////////////////////////////////////////////////////
-
   /** Creates a new controller object with default view and empty model. */
-  private WorldController () {
+  public WorldController () {
 
     view = new WorldView();
     double radius = view.worldRadius();
     Bounds bounds = new BoundingBox (-radius, -radius, -radius, radius*2, radius*2, radius*2);
     model = new WorldModel (bounds);
     sceneGraphChangeQueue = new ConcurrentLinkedQueue<>();
+    globeIntersectProp = new SimpleObjectProperty<> (this, "globeIntersect");
+    coordTransProp = new SimpleObjectProperty<> (this, "coordTrans", new SphereTranslator (radius));
 
     // Set up the timer that polls for scene graph changes and performs
     // them when no animations are happening.  We assume that animation has
@@ -171,7 +198,7 @@ public class WorldController {
     // Add the various change and event listeners.
     addViewReference();
     addViewMouseControls();
-    addViewKeyboardControls();
+//    addViewKeyboardControls();
     addViewListeners();
 
   } // WorldController
@@ -206,7 +233,7 @@ public class WorldController {
     // Add some default ambient and point lights
     AmbientLight ambient = new AmbientLight (Color.color (0.5, 0.5, 0.5));
 //    AmbientLight ambient = new AmbientLight (Color.color (1, 1, 1));
-    PointLight point = new PointLight (Color.WHITE);
+    PointLight point = new PointLight (Color.color (0.55, 0.55, 0.55));
     point.setTranslateX (-25);
     point.setTranslateY (-25);
     point.setTranslateZ (-50);
@@ -231,7 +258,26 @@ public class WorldController {
     ambient.getExclusionScope().add (graticule);
     fullAmbient.getScope().add (graticule);
 
+    // Add the stars
+//    var stars = StarFieldFactory.getInstance().createField (radius/6371);
+//    stars.setViewOrder (BAACKGROUND_VIEW_ORDER);
+//    view.addObject (stars);
+//    point.getExclusionScope().add (stars);
+//    ambient.getExclusionScope().add (stars);
+//    fullAmbient.getScope().add (stars);
+
   } // addViewReference
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the graticule visible property, by default set to true.
+   *
+   * @return the graticule visible property.
+   *
+   * @since 0.6
+   */
+  public BooleanProperty graticuleVisibleProperty () { return (graticule.visibleProperty()); }
 
   /////////////////////////////////////////////////////////////////
 
@@ -312,6 +358,12 @@ public class WorldController {
       if (newLevel != level) view.cameraZoomProperty().setValue (newLevel);
     });
 
+    // Modify the zoom on zoom gesture
+    view.addSceneEventHandler (ZoomEvent.ZOOM, event -> {
+      double newLevel = view.getZoomForDistance (view.cameraDistance()/event.getZoomFactor());
+      view.cameraZoomProperty().setValue (newLevel);
+    });
+
     // Perform a zoom animation on double click
     view.addSceneEventHandler (MouseEvent.MOUSE_CLICKED, event -> {
       if (event.getClickCount() == 2) {
@@ -327,7 +379,29 @@ public class WorldController {
     view.addSceneEventHandler (MouseEvent.MOUSE_CLICKED, event -> {
       if (event.getClickCount() == 1) {
         stopAnimation();
+        view.getScene().requestFocus();
       } // if
+    });
+
+    // Capture globe intersect point on mouse movement
+    view.addSceneEventHandler (MouseEvent.MOUSE_MOVED, event -> {
+      PickResult result = event.getPickResult();
+      Node node = result.getIntersectedNode();
+      if (node == globe) {
+        Point3D point = result.getIntersectedPoint();
+        globeIntersectProp.setValue (point);
+      } // if
+      else {
+        globeIntersectProp.setValue (null);
+      } // else
+    });
+
+    view.addSceneEventHandler (MouseEvent.MOUSE_EXITED, event -> {
+      globeIntersectProp.setValue (null);
+    });
+
+    view.cameraPositionProperty().addListener ((obs, oldVal, newVal) -> {
+      globeIntersectProp.setValue (null);
     });
 
   } // addViewMouseControls
@@ -408,7 +482,7 @@ public class WorldController {
   /////////////////////////////////////////////////////////////////
 
   /**
-   * Start a zoom and shift animation to the specified angles and level.
+   * Starts a zoom and shift animation to the specified angles and level.
    *
    * @param newXAngle the new X angle value in the range [-90..90].
    * @param newYAngle the new Y angle value in the range [-180..180].
@@ -424,60 +498,149 @@ public class WorldController {
     startZoom (view.getZoomForExtent (angle));
 
   } // zoomTo
+
+  /////////////////////////////////////////////////////////////////
+
+  /** The possible directions for shift operations. */
+  public enum ShiftDirection { NONE, NORTH, SOUTH, EAST, WEST }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Starts a shift animation in the specified direction.
+   *
+   * @param direction the direction to shift towards.
+   * @param rate the shift rate, where the normal rate is 1, half is 0.5,
+   * double is 2, etc.
+   */
+  public void shiftTo (
+    ShiftDirection direction,
+    double rate
+  ) {
+
+    double xAngleInc = 0, yAngleInc = 0;
+    switch (direction) {
+    case WEST: yAngleInc = -SHIFT_ANGLE; break;
+    case EAST: yAngleInc = SHIFT_ANGLE; break;
+    case NORTH: xAngleInc = SHIFT_ANGLE; break;
+    case SOUTH: xAngleInc = -SHIFT_ANGLE; break;
+    } // switch
+
+    double angleFactor = view.cameraDistance() / view.maxCameraDistance();
+
+    double xAngle = view.xAngleProperty().getValue();
+    double newXAngle = xAngle + xAngleInc*angleFactor;
+    if (newXAngle < -90) newXAngle = -90;
+    else if (newXAngle > 90) newXAngle = 90;
+
+    double yAngle = view.yAngleProperty().getValue();
+    int sign = yAngleInc > 0 ? 1 : -1;
+    
+    // This next line helps with making east/west shifts appear similar in
+    // distance to north/south shifts.  Except for two cases: above 75 degrees
+    // we limit the latitude factor, and when zoomed far out at high latitudes,
+    // we limit the total shift angle.  This approximates reasonable shift
+    // behaviour.
+    double newYAngle = yAngle + sign*Math.min (SHIFT_ANGLE, Math.abs (yAngleInc)*angleFactor / Math.cos (Math.toRadians (Math.min (75, Math.abs (xAngle)))));
+
+    if (yAngle < 0) yAngle += 360;
+    else if (yAngle > 360) yAngle -= 360;
+
+    if (newXAngle != xAngle || newYAngle != yAngle) {
+      stopAnimation();
+      KeyValue keyXValue = new KeyValue (view.xAngleProperty(), newXAngle, Interpolator.EASE_BOTH);
+      KeyValue keyYValue = new KeyValue (view.yAngleProperty(), newYAngle, Interpolator.EASE_BOTH);
+      int duration = (int) (POSITION_SHIFT_DURATION/rate);
+      KeyFrame frame = new KeyFrame (Duration.millis (duration), keyXValue, keyYValue);
+      shiftTimeline = new Timeline (frame);
+      shiftTimeline.play();
+    } // if
+
+  } // shiftTo
   
   /////////////////////////////////////////////////////////////////
 
-  /** Adds the standard view keyboard manipulation controls. */
-  private void addViewKeyboardControls () {
+  /**
+   * Starts a zoom in animation.
+   *
+   * @since 0.6
+   */
+  public void zoomIn () { startZoom (ZoomDirection.ZOOM_IN); }
 
-    // Change the view zoom in response to A or Z.
-    view.addSceneEventHandler (KeyEvent.KEY_PRESSED, event -> {
-      switch (event.getCode()) {
-      case A: startZoom (ZoomDirection.ZOOM_IN); break;
-      case Z: startZoom (ZoomDirection.ZOOM_OUT); break;
-      } // switch
-    });
+  /////////////////////////////////////////////////////////////////
 
-    // Change the view X and Y rotation angles in response
-    // to the arrow keys.
-    view.addSceneEventHandler (KeyEvent.KEY_PRESSED, event -> {
+  /**
+   * Starts a zoom out animation.
+   *
+   * @since 0.6
+   */
+  public void zoomOut () { startZoom (ZoomDirection.ZOOM_OUT); }
 
-      double xAngleInc = 0, yAngleInc = 0;
-      switch (event.getCode()) {
-      case LEFT: yAngleInc = -45; break;
-      case RIGHT: yAngleInc = 45; break;
-      case UP: xAngleInc = 45; break;
-      case DOWN: xAngleInc = -45; break;
-      } // switch
+  /////////////////////////////////////////////////////////////////
 
-      if (xAngleInc != 0 || yAngleInc != 0) {
+  /**
+   * Starts a north shift animation.
+   *
+   * @since 0.6
+   */
+  public void shiftNorth () { shiftTo (ShiftDirection.NORTH, 1.7); }
 
-        double xAngle = view.xAngleProperty().getValue();
-        double newXAngle = xAngle + xAngleInc;
-        if (newXAngle < -90) newXAngle = -90;
-        else if (newXAngle > 90) newXAngle = 90;
+  /////////////////////////////////////////////////////////////////
 
-        double yAngle = view.yAngleProperty().getValue();
-        double newYAngle = yAngle + yAngleInc;
-        if (yAngle < 0) yAngle += 360;
-        else if (yAngle > 360) yAngle -= 360;
+  /**
+   * Starts a south shift animation.
+   *
+   * @since 0.6
+   */
+  public void shiftSouth () { shiftTo (ShiftDirection.SOUTH, 1.7); }
 
-        if (newXAngle != xAngle || newYAngle != yAngle) {
-          stopAnimation();
-          KeyValue keyXValue = new KeyValue (view.xAngleProperty(), newXAngle, Interpolator.EASE_BOTH);
-          KeyValue keyYValue = new KeyValue (view.yAngleProperty(), newYAngle, Interpolator.EASE_BOTH);
-          int duration = POSITION_SHIFT_DURATION;
-          if (event.isShiftDown()) duration = duration / 2;
-          KeyFrame frame = new KeyFrame (Duration.millis (duration), keyXValue, keyYValue);
-          shiftTimeline = new Timeline (frame);
-          shiftTimeline.play();
-        } // if
+  /////////////////////////////////////////////////////////////////
 
-      } // if
-      
-    });
+  /**
+   * Starts a east shift animation.
+   *
+   * @since 0.6
+   */
+  public void shiftEast () { shiftTo (ShiftDirection.EAST, 1.7); }
 
-  } // addViewKeyboardControls
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Starts a west shift animation.
+   *
+   * @since 0.6
+   */
+  public void shiftWest () { shiftTo (ShiftDirection.WEST, 1.7); }
+
+  /////////////////////////////////////////////////////////////////
+
+//  /** Adds the standard view keyboard manipulation controls. */
+//  private void addViewKeyboardControls () {
+//
+//    // Change the view zoom in response to A or Z.
+//    view.addSceneEventHandler (KeyEvent.KEY_PRESSED, event -> {
+//      switch (event.getCode()) {
+//      case A: startZoom (ZoomDirection.ZOOM_IN); break;
+//      case Z: startZoom (ZoomDirection.ZOOM_OUT); break;
+//      } // switch
+//    });
+//
+//    // Change the view X and Y rotation angles in response
+//    // to the arrow keys.
+//    view.addSceneEventHandler (KeyEvent.KEY_PRESSED, event -> {
+//      ShiftDirection direction = ShiftDirection.NONE;
+//      switch (event.getCode()) {
+//      case J: direction = ShiftDirection.WEST; break;
+//      case L: direction = ShiftDirection.EAST; break;
+//      case I: direction = ShiftDirection.NORTH; break;
+//      case K: direction = ShiftDirection.SOUTH; break;
+//      } // switch
+//      if (direction != ShiftDirection.NONE) {
+//        shiftTo (direction, 1.7);
+//      } // if
+//    });
+//
+//  } // addViewKeyboardControls
 
   /////////////////////////////////////////////////////////////////
 
@@ -558,18 +721,20 @@ public class WorldController {
   /** Adds listeners for view changes. */
   private void addViewListeners () {
 
+    ChangeListener<Number> listener = (obs, oldVal, newVal) -> {
+      if (oldVal != newVal) updateFrustum();
+    };
+    
     // Set up the listeners for angle changes
-    view.xAngleProperty().addListener ((obs, oldVal, newVal) -> {
-      if (oldVal != newVal) updateFrustum();
-    });
-    view.yAngleProperty().addListener ((obs, oldVal, newVal) -> {
-      if (oldVal != newVal) updateFrustum();
-    });
+    view.xAngleProperty().addListener (listener);
+    view.yAngleProperty().addListener (listener);
 
     // Set up the listener for zoom changes (ie: camera z position)
-    view.cameraZoomProperty().addListener ((obs, oldVal, newVal) -> {
-      if (oldVal != newVal) updateFrustum();
-    });
+    view.cameraZoomProperty().addListener (listener);
+
+    // Set up listeners for view size changes
+    view.getScene().widthProperty().addListener (listener);
+    view.getScene().heightProperty().addListener (listener);
 
     // Set up for handling metered view scene graph changes.  We do this
     // by allowing only some number of scene graph changes for each

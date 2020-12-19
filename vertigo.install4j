@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.8" transformSequenceNumber="8">
   <directoryPresets config="./javafx/linux/javafx-jmods-14.0.2.1" />
-  <application name="Vertigo" applicationId="8938-5182-3607-0111" mediaDir="./media" shortName="vertigo" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="0.5" allPathsRelative="true" macVolumeId="2ad2589a68244318" javaMinVersion="14">
+  <application name="Vertigo" applicationId="8938-5182-3607-0111" mediaDir="./media" shortName="vertigo" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="0.6" allPathsRelative="true" macVolumeId="2ad2589a68244318" javaMinVersion="14">
     <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk14/jdk-14.0.2+12_openj9-0.21.0" />
   </application>
   <files>
@@ -473,6 +473,10 @@ return console.askYesNo(message, true);
           <jmod location="./javafx/macos/javafx-jmods-14.0.2.1/javafx.base.jmod" />
           <jmod location="./javafx/macos/javafx-jmods-14.0.2.1/javafx.controls.jmod" />
           <jmod location="./javafx/macos/javafx-jmods-14.0.2.1/javafx.graphics.jmod" />
+          <jmod location="./javafx/macos/javafx-jmods-14.0.2.1/javafx.fxml.jmod" />
+          <jmod location="./javafx/macos/javafx-jmods-14.0.2.1/javafx.swing.jmod" />
+          <jmod location="./javafx/macos/javafx-jmods-14.0.2.1/javafx.web.jmod" />
+          <jmod location="./javafx/macos/javafx-jmods-14.0.2.1/javafx.media.jmod" />
         </modules>
       </jreBundle>
       <topLevelFiles>
@@ -487,6 +491,10 @@ return console.askYesNo(message, true);
           <jmod location="./javafx/windows/javafx-jmods-14.0.2.1/javafx.base.jmod" />
           <jmod location="./javafx/windows/javafx-jmods-14.0.2.1/javafx.controls.jmod" />
           <jmod location="./javafx/windows/javafx-jmods-14.0.2.1/javafx.graphics.jmod" />
+          <jmod location="./javafx/windows/javafx-jmods-14.0.2.1/javafx.fxml.jmod" />
+          <jmod location="./javafx/windows/javafx-jmods-14.0.2.1/javafx.swing.jmod" />
+          <jmod location="./javafx/windows/javafx-jmods-14.0.2.1/javafx.web.jmod" />
+          <jmod location="./javafx/windows/javafx-jmods-14.0.2.1/javafx.media.jmod" />
         </modules>
       </jreBundle>
     </windows>
@@ -496,15 +504,23 @@ return console.askYesNo(message, true);
           <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.base.jmod" />
           <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.controls.jmod" />
           <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.graphics.jmod" />
+          <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.fxml.jmod" />
+          <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.swing.jmod" />
+          <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.web.jmod" />
+          <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.media.jmod" />
         </modules>
       </jreBundle>
     </unixArchive>
-    <linuxDeb name="Linux Deb Archive" id="197" description="Vertigo Beta data viewer for ERDDAP and THREDDS datasets" maintainerEmail="coastwatch.info@noaa.gov">
+    <linuxDeb name="Linux Deb Archive" id="197" description="Vertigo Project data viewer for ERDDAP and THREDDS datasets" maintainerEmail="coastwatch.info@noaa.gov">
       <jreBundle jreBundleSource="generated">
         <modules>
           <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.base.jmod" />
           <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.controls.jmod" />
           <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.graphics.jmod" />
+          <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.fxml.jmod" />
+          <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.swing.jmod" />
+          <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.web.jmod" />
+          <jmod location="./javafx/linux/javafx-jmods-14.0.2.1/javafx.media.jmod" />
         </modules>
       </jreBundle>
     </linuxDeb>

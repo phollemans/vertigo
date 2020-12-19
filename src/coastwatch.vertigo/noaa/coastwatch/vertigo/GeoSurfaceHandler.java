@@ -10,8 +10,8 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point3D;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.util.logging.Logger;
 
@@ -26,33 +26,43 @@ public class GeoSurfaceHandler {
 
   private static final Logger LOGGER = Logger.getLogger (GeoSurfaceHandler.class.getName());
 
-  /** The singleton instance of the handler. */
-  private static GeoSurfaceHandler instance;
+  /** The controller for the world view and model. */
+  private WorldController worldController;
 
-  /** The map of surface to change listener. */
-  private Map<DynamicSurface, ChangeListener<Point3D>> cameraListenerMap;
-
-  /////////////////////////////////////////////////////////////////
-
-  protected GeoSurfaceHandler() {
-  
-    cameraListenerMap = new HashMap<>();
-  
-  } // GeoSurfaceHandler
+  /** The list of active surfaces. */
+  private List<DynamicSurface> surfaceList;
 
   /////////////////////////////////////////////////////////////////
 
   /**
-   * Gets the singleton instance of the handler.
+   * Creates a surface handler for the specified world controller.
    *
-   * @return the singleton instance.
+   * @param worldController the world controller to handle surfaces for.
+   *
+   * @since 0.6
    */
-  public static GeoSurfaceHandler getInstance () {
+  public GeoSurfaceHandler (
+    WorldController worldController
+  ) {
   
-    if (instance == null) instance = new GeoSurfaceHandler();
-    return (instance);
+    this.worldController = worldController;
+    surfaceList = new ArrayList<>();
   
-  } // getInstance
+    // Update the surface camera positions when needed
+    var view = worldController.getView();
+    view.cameraPositionProperty().addListener ((obs, oldVal, newVal) -> {
+      surfaceList.forEach (surface -> surface.setCameraPosition (newVal));
+    });
+
+    // Force an update of the surfaces if the scene changes size
+    var scene = view.getScene();
+    ChangeListener<Number> listener = (obs, oldVal, newVal) -> {
+      surfaceList.forEach (surface -> surface.update());
+    };
+    scene.widthProperty().addListener (listener);
+    scene.heightProperty().addListener (listener);
+
+  } // GeoSurfaceHandler
 
   /////////////////////////////////////////////////////////////////
 
@@ -64,12 +74,11 @@ public class GeoSurfaceHandler {
    */
   public GeoSurfaceViewContext getContext () {
 
-    var controller = WorldController.getInstance();
     var context = new GeoSurfaceViewContext();
-    double radius = controller.getView().worldRadius();
-    context.coordTrans = new SphereTranslator (radius);
+    context.coordTrans = worldController.coordTransProperty().getValue();
+    double radius = worldController.getView().worldRadius();
     context.deltaFunc = (a,b) -> SphereFunctions.delta (a, b, radius);
-    context.viewProps = controller.getView().getProperties();
+    context.viewProps = worldController.getView().getProperties();
 
     return (context);
     
@@ -88,19 +97,16 @@ public class GeoSurfaceHandler {
   ) {
   
     if (!Platform.isFxApplicationThread()) throw new IllegalStateException ("Not on JavaFX application thread");
-  
-    var controller = WorldController.getInstance();
-    surface.setFacetConsumer (facet -> controller.addObject (facet.getNode()));
-    surface.setUpdateConsumer (update -> controller.addSceneGraphChange (update));
+    if (surfaceList.contains (surface)) LOGGER.warning ("Surface already in active list");
+    else {
 
-    ChangeListener<Point3D> listener = (obs, oldVal, newVal) -> {
-      surface.setCameraPosition (newVal);
-    };
-    cameraListenerMap.put (surface, listener);
-    controller.getView().cameraPositionProperty().addListener (listener);
-
-    surface.setCameraPosition (controller.getView().cameraPositionProperty().get());
-    surface.setActive (true);
+      surface.setFacetConsumer (facet -> worldController.addObject (facet.getNode()));
+      surface.setUpdateConsumer (update -> worldController.addSceneGraphChange (update));
+      surfaceList.add (surface);
+      surface.setCameraPosition (worldController.getView().cameraPositionProperty().get());
+      surface.setActive (true);
+    
+    } // if
 
   } // activateSurface
 
@@ -118,20 +124,22 @@ public class GeoSurfaceHandler {
   ) {
   
     if (!Platform.isFxApplicationThread()) throw new IllegalStateException ("Not on JavaFX application thread");
+    if (!surfaceList.contains (surface)) LOGGER.warning ("Surface not in active list");
+    else {
   
-    var listener = cameraListenerMap.remove (surface);
-    if (listener == null) LOGGER.warning ("Camera position listener not found in cache");
-    var controller = WorldController.getInstance();
-    controller.getView().cameraPositionProperty().removeListener (listener);
-    surface.setActive (false);
-    surface.setFacetConsumer (null);
-    surface.setUpdateConsumer (null);
+      surfaceList.remove (surface);
 
-    // TODO: In future versions we would selectively clear the facet nodes
-    // from the controller that this surface contains.  For now though we
-    // simply clear the entire model (we assume that only one surface is active
-    // at once).
-    controller.clearObjects();
+      surface.setActive (false);
+      surface.setFacetConsumer (null);
+      surface.setUpdateConsumer (null);
+
+      // TODO: In future versions we would selectively clear the facet nodes
+      // from the controller that this surface contains.  For now though we
+      // simply clear the entire model (we assume that only one surface is active
+      // at once).
+      worldController.clearObjects();
+      
+    } // else
 
   } // deactivateSurface
   

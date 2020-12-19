@@ -7,11 +7,15 @@
 package noaa.coastwatch.vertigo;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import java.util.function.ToDoubleBiFunction;
+
+import java.net.URL;
+import java.net.MalformedURLException;
 
 import java.io.IOException;
 
@@ -47,6 +51,14 @@ public class WebMapSurfaceFactory extends BaseProjectViewObject implements GeoSu
   /** The pixels high of the image data for the surface. */
   private int height;
 
+  /** The list of extra init tasks to perform during initialization. */
+  private List<Runnable> initTasks;
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public void addInitTask (Runnable task) { initTasks.add (task); }
+
   /////////////////////////////////////////////////////////////////
 
   /**
@@ -62,6 +74,7 @@ public class WebMapSurfaceFactory extends BaseProjectViewObject implements GeoSu
   
     this.webmap = webmap;
     this.viewContext = viewContext;
+    this.initTasks = new ArrayList<>();
   
   } // WebMapSurfaceFactory
 
@@ -82,6 +95,9 @@ public class WebMapSurfaceFactory extends BaseProjectViewObject implements GeoSu
     // Before anything else, see if we are already initialized.
     if (isInitialized()) return;
 
+    // Run the init tasks if there are any
+    for (var task : initTasks) task.run();
+
     // Store the time and dimension information.
     timeList = webmap.getTimes();
 
@@ -92,8 +108,8 @@ public class WebMapSurfaceFactory extends BaseProjectViewObject implements GeoSu
 
     // Perform a test download of image data.
     var dataSource = (WebMapDataSource) webmap.getDataSource (0);
-    boolean success = dataSource.testServer();
-    if (!success) throw new IOException ("Error testing web map server");
+    try { dataSource.testServer(); }
+    catch (Exception e) { throw new IOException (e); }
 
     // Report various statistics for debugging purposes.
     if (LOGGER.isLoggable (Level.FINE)) {
@@ -163,6 +179,23 @@ public class WebMapSurfaceFactory extends BaseProjectViewObject implements GeoSu
     return (surface);
   
   } // createSurface
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public String getCredit() {
+
+    String credit = null;
+    try {
+      var url = new URL (webmap.getSourceURL());
+      credit = url.getHost();
+      if (credit.length() == 0) credit = null;
+    } // try
+    catch (MalformedURLException e) { }
+    
+    return (credit);
+    
+  } // getCredit
 
   /////////////////////////////////////////////////////////////////
 

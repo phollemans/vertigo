@@ -13,10 +13,7 @@ package noaa.coastwatch.vertigo;
  * @author Peter Hollemans
  * @since 0.5
  */
-public class Area {
-
-  /** The name of the area for display. */
-  public String name;
+public class Area extends BaseProjectObject {
 
   /** The center latitude in degrees in the range [-90..90]. */
   public double latitude;
@@ -28,26 +25,24 @@ public class Area {
   public double extent;
 
   /////////////////////////////////////////////////////////////////
-  
+
   /**
    * Creates a new area object.
    *
    * @param latitude the center latitude in degrees in the range [-90..90].
    * @param longitude the center longitude in degrees in the range [-180..180].
-   * @param extent the eter in degrees of the area circ.
+   * @param extent the extent in degrees of the area circle.
    */
   public Area (
-    String name,
     double latitude,
     double longitude,
     double extent
   ) {
 
-    this.name = name;
     this.latitude = latitude;
     this.longitude = longitude;
     this.extent = extent;
-
+    
   } // Area
 
   /////////////////////////////////////////////////////////////////
@@ -55,7 +50,12 @@ public class Area {
   @Override
   public String toString() {
   
-    return ("Area[name=" + name + ",latitude=" + latitude + ",longitude=" + longitude + ",extent=" + extent + "]");
+    return ("Area[" +
+      "name=" + getName() + "," +
+      "group=" + getGroup() + "," +
+      "latitude=" + latitude + "," +
+      "longitude=" + longitude + "," +
+      "extent=" + extent + "]");
 
   } // toString
 

@@ -126,6 +126,17 @@ public class SimpleWebMap implements WebMap {
 
   /////////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the date/time list.
+   *
+   * @param dateList the new list of dates values to use.
+   *
+   * @since 0.6
+   */
+  public void setTimes (List<Date> dateList) { this.dateList = dateList; }
+
+  /////////////////////////////////////////////////////////////////
+
   @Override
   public List<Date> getTimes() { return (dateList); }
 
@@ -163,6 +174,11 @@ public class SimpleWebMap implements WebMap {
 
   @Override
   public ImageCoordinateSource getCoordinateSource() { return (coordinateSource); }
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public String getSourceURL() { return (urlPattern); }
 
   /////////////////////////////////////////////////////////////////
 

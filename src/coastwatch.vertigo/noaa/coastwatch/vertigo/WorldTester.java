@@ -559,7 +559,7 @@ public class WorldTester {
       } // else if
       else throw new RuntimeException ("Unknown function type " + funcType);
     
-      DoubleToColorConverter converter = new DoubleToColorConverter (map, func);
+      DoubleToColorConverter converter = new DoubleToColorConverter (min, max, func, map);
       ImageTileWriter tileWriter = new ColorTileWriter<double[]> (dataSource, converter);
 
       FacetDataSource source;

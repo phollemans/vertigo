@@ -1,96 +1,24 @@
 <project name="vertigo" default="module">
 
-  <property name="java.path" value="jdk-14.jdk/Contents/Home/bin"/>
-  <property name="javac.args" value="-Xlint:unchecked -Xlint:deprecation -d mod --module-source-path src --module-path javafx-jmods-14:lib"/>
-  <property name="java.args" value="-Dprism.lcdtext=false -Djava.util.logging.config.file=logging.properties --module-path javafx-sdk-14/lib:mod:lib"/>
+  <buildnumber/>
+  <property name="vertigo.version" value="0.6"/>
+  <tstamp>
+    <format property="build.date" pattern="EEEEE, MMMMM dd, yyyy h:mm:ss a zzz" locale="en,Canada"/>
+  </tstamp>
   
-  <property name="demo.mode" value="false"/>
-  <property name="line.mode" value="false"/>
-  <property name="axes" value="false"/>
-  <property name="texture" value="test/sst/20200512120000-STAR-L3S_GHRSST-SSTsubskin-LEO_PM_D-ACSPO_V2.80B03-v02.0-fv01.0.png"/>
-
-  <property name="netcdf.1" value="test/sst/ct5km_climatology_v3.1.nc,sst_clim_june,-5,35,linear,test/palettes/Ocean-thermal.xml"/>
-  <property name="netcdf.2" value="test/sst/20200512120000-STAR-L3S_GHRSST-SSTsubskin-LEO_PM_D-ACSPO_V2.80B03-v02.0-fv01.0.nc,sea_surface_temperature,268,308,linear,test/palettes/Blue-red.xml"/>
-  <property name="netcdf.2.5" value="test/sst/20200512120000-STAR-L3S_GHRSST-SSTsubskin-LEO_PM_N-ACSPO_V2.80B03-v02.0-fv01.0.nc,sea_surface_temperature,268,308,linear,test/palettes/Blue-red.xml"/>
-  <property name="netcdf.3" value="https://cwcgom.aoml.noaa.gov/erddap/griddap/miamiSST,sst,15,35,linear,test/palettes/Blue-red.xml"/>
-  <property name="netcdf.4" value="https://www.star.nesdis.noaa.gov/thredds/dodsC/sst_acspo/nightVIIRSn20SectorDailyVY00/VSSTNCW_C2020180_C7_054001_055001_072000_073001_090000_091000_104001_VY00_mixed_seasurfacetemperature.nc,sea_surface_temperature,268,308,linear,test/palettes/Blue-red.xml"/>
-  <property name="netcdf.5" value="test/sst/VSSTNCW_C2020180_C7_054001_055001_072000_073001_090000_091000_104001_VY00_mixed_seasurfacetemperature.nc,sea_surface_temperature,268,308,linear,test/palettes/Blue-red.xml"/>
-  <property name="netcdf.6" value="test/topo/etopo1.nc,elevation,-6100,6100,linear,test/palettes/Ocean-topo.xml"/>
-  <property name="netcdf.6.5" value="https://cwcgom.aoml.noaa.gov/erddap/griddap/etopo180,altitude,-6100,6100,linear,test/palettes/Ocean-topo.xml"/>
-  <property name="netcdf.7" value="https://cwcgom.aoml.noaa.gov/erddap/griddap/noaa_aoml_7041_a3e0_5c73,sst_analysis_night_only,-5,35,linear,test/palettes/Ocean-thermal.xml"/>
-  <property name="netcdf.8" value="test/sst/noaa_aoml_7041_a3e0_5c73_52dc_ec89_10ea.nc,sst_analysis_night_only,0,35,linear,test/palettes/Blue-red.xml"/>
-  <property name="netcdf.9" value="https://polarwatch.noaa.gov/erddap/griddap/jplUKMO_OSTIAv20,sea_ice_fraction,0,1,linear,test/palettes/Ocean-ice.xml"/>
-  <property name="netcdf.10" value="test/seaice/ice.ncml,seaice_conc_monthly_cdr,0,1,linear,test/palettes/Ocean-ice.xml"/>
-  <property name="netcdf.11" value="test/seaice/jplUKMO_OSTIAv20_54eb_ed60_745c.nc,sea_ice_fraction,0,1,linear,test/palettes/Ocean-ice.xml"/>
-  <property name="netcdf.12" value="https://polarwatch.noaa.gov/erddap/griddap/jplAquariusSSS3MonthV5,sss,32,37,linear,test/palettes/Ocean-curl.xml"/>
-  <property name="netcdf.13" value="https://coastwatch.noaa.gov/erddap/griddap/noaacwSMAPsss3Daily,sss,32,37,linear,test/palettes/Blue-red.xml"/>
-  <property name="netcdf.14" value="https://coastwatch.noaa.gov/erddap/griddap/noaacwBLENDEDsstDaily,analysed_sst,268,308,linear,test/palettes/Ocean-thermal.xml"/>
-  <property name="netcdf.15" value="https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplG1SST,SST,-5,35,linear,test/palettes/Ocean-thermal.xml"/>
-  <property name="netcdf.16" value="https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplUKMO_OSTIAv20,analysed_sst,-5,35,linear,test/palettes/Ocean-thermal.xml"/>
-  <property name="netcdf.17" value="test/sst/jplG1SST_5999_529a_9486.nc,SST,-5,35,linear,test/palettes/Ocean-thermal.xml"/>
-  <property name="netcdf.18" value="https://coastwatch.pfeg.noaa.gov/erddap/griddap/nceiPH53sstn1day,wind_speed,0,25,linear,test/palettes/Blue-red.xml"/>
-
-  <property name="netcdf.19" value="https://coastwatch.noaa.gov/erddap/griddap/noaacwN20VIIRSchlaDaily,chlor_a,0.01,64,log,test/palettes/NCCOS-chla.xml"/>
-  <property name="netcdf.19.5" value="https://www.star.nesdis.noaa.gov/thredds/dodsC/CoastWatch/VIIRS/n20/chlora/DailyGlobal/WW00,chlor_a,0.01,64,log,test/palettes/NCCOS-chla.xml"/>
-  <property name="netcdf.19.6" value="https://www.star.nesdis.noaa.gov/thredds/dodsC/CoastWatch/VIIRS/npp/chlora/WeeklyGlobal/WW00,chlor_a,0.01,64,log,test/palettes/NCCOS-chla.xml"/>
-  <property name="netcdf.19.7" value="https://coastwatch.noaa.gov/thredds/dodsC/chloraVIIRSnppGlobalWeeklyWW00/VRSVCW_B2020193_B2020199_F7_WW00_edgemask_chlora.nc,chlor_a,0.01,64,log,test/palettes/NCCOS-chla.xml"/>
-
-  <property name="netcdf.20" value="https://www.star.nesdis.noaa.gov/thredds/dodsC/CoastWatch/VIIRS/npp/IceConc/DailySector/NP06,IceConc,0,1,linear,test/palettes/Ocean-ice.xml"/>
-  <property name="netcdf.21" value="https://www.star.nesdis.noaa.gov/thredds/dodsC/AMSR2gw1IceConcDailyAggNP06,IceConc,0,1,linear,test/palettes/Ocean-ice.xml"/>
-  <property name="netcdf.22" value="https://www.star.nesdis.noaa.gov/thredds/dodsC/AMSR2gw1IceConcDailyAggSP06,IceConc,0,1,linear,test/palettes/Ocean-ice.xml"/>
-  <property name="netcdf.23" value="https://www.star.nesdis.noaa.gov/thredds/dodsC/BlendedSST5kmNightAggGHRSSTOSPOLoM,analysed_sst,268,308,linear,test/palettes/HSL256.xml"/>
-  <property name="netcdf.24" value="https://www.star.nesdis.noaa.gov/thredds/dodsC/BlendedSST5kmNightAggGHRSSTOSPOLoM,sea_ice_fraction,0,1,linear,test/palettes/Ocean-ice.xml"/>
-  <property name="netcdf.25" value="https://www.star.nesdis.noaa.gov/thredds/dodsC/BlendedSST5kmNightAggGHRSSTOSPOLoM,mask,0,4,linear,test/palettes/BW-Linear.xml"/>
-  <property name="netcdf.26" value="https://oceandata.sci.gsfc.nasa.gov:443/opendap/VIIRSJ1/L3SMI/2020/199/V2020199.L3m_DAY_JPSS1_CHL_chl_ocx_4km.nc,chl_ocx,0.01,64,log,test/palettes/NCCOS-chla.xml"/>
-
-
-<!--
-1: SST climatology (local)
-2: Full res ACSPO SST (Oli)
-4: SST night ACSPO (remote)
-5: SST sector (local)
-6: Topography (local)
-9: Ice (remote)
-10: Ice polar stereographic (local)
-11: Ice (local)
-19: Chlorophyll (remote)
--->
-
-
-  <property name="netcdf" value="${netcdf.19.7}"/>
-
-  <property name="webmap.1" value="https://www.star.nesdis.noaa.gov/socd/mecb/color/ocview/VIIRS/truecolor/%Y/%Y%M%D/%L/%y_%x.png,8,512,90,-180"/>
-  <property name="webmap.2" value="https://www.star.nesdis.noaa.gov/socd/mecb/color/ocview/VIIRSJ1/truecolor/%Y/%Y%M%D/%L/%y_%x.png,8,512,90,-180"/>
-  <property name="webmap.2.5" value="https://www.star.nesdis.noaa.gov/socd/mecb/color/ocview/VIIRSJ1/truecolor/2018/20180101/%L/%y_%x.png,8,512,90,-180"/>
-  <property name="webmap.3" value="https://www.star.nesdis.noaa.gov/socd/mecb/color/ocview/OLCI/truecolor/%Y/%Y%M%D/%L/%y_%x.png,8,512,90,-180"/>
-  <property name="webmap.4" value="https://www.star.nesdis.noaa.gov/socd/mecb/color/ocview/OLCIB/truecolor/%Y/%Y%M%D/%L/%y_%x.png,8,512,90,-180"/>
-  <property name="webmap.5" value="https://www.star.nesdis.noaa.gov/socd/mecb/color/ocview/SGLI_GC1/truecolor/%Y/%Y%M%D/%L/%y_%x.png,8,512,90,-180"/>
-  <property name="webmap.6" value="https://oceanwatch.aoml.noaa.gov/GOES16_TRUECOLOR/%Y%J%H00/%l/%x/%i.png,7,256,90,-180"/>
-  <property name="webmap.7" value="https://oceanwatch.aoml.noaa.gov/GOES17_TRUECOLOR/%Y%J%H00/%l/%x/%i.png,7,256,90,-180"/>
-  <property name="webmap.8" value="https://www.star.nesdis.noaa.gov/data/socd1/mecb/color/ocview/VIIRS/l2products/noaa_msl12_nrt/chl/daily/%Y/%Y%M%D/%L/%y_%x.png,5,540,90,-180"/>
-  <property name="webmap.9" value="https://www.star.nesdis.noaa.gov/socd/mecb/color/ocview/landmask/LonLat/v3/%L/%y_%x.png,6,1350,90,-180"/>
-  <property name="webmap.10" value="https://www.star.nesdis.noaa.gov/data/socd1/mecb/color/ocview/VIIRS/l2products/noaa_msl12_nrt/chl/monthly/%Y/%Y%M/%L/%y_%x.png,5,540,90,-180"/>
-
-<!--
-  1: True color VIIRS
-  4: True color OLCI
-  7: GOES 17 (Miami)
-  10: VIIRS chlorophyll (monthly)
--->
-
-  <property name="webmap" value="${webmap.7}"/>
-
+  <property name="java.path" value="jdk-14.jdk/Contents/Home/bin"/>
+  <property name="javafx.version" value="14"/>
+  <property name="javac.args" value="-Xlint:unchecked -Xlint:deprecation -d mod --module-source-path src --module-path javafx-jmods-${javafx.version}:lib"/>
+  <property name="java.args" value="-Ddpi=81 -Dprism.lcdtext=false -Djava.util.logging.config.file=logging.properties --module-path javafx-sdk-${javafx.version}/lib:mod:lib"/>
+  <property name="vertigo.properties" value="mod/coastwatch.vertigo/noaa/coastwatch/vertigo/vertigo.properties"/>
+  
   <property name="project" value="file:test/project/project.vrtx"/>
-
 <!--
   <property name="project" value="http://www.terrenus.ca/download/vertigo/project.vrtx"/>
 -->
 
   <target name="clean">
     <delete dir="mod"/>
-    <delete dir="JavaRuntimeImage"/>
-    <delete file="Vertigo-0.5.dmg"/>
-    <delete dir="Vertigo.app"/>
     <delete file="vertigo.zip"/>
   </target>
   
@@ -102,6 +30,9 @@
     <copy todir="mod/coastwatch.vertigo">
       <fileset dir="src/coastwatch.vertigo/resources"/>
     </copy>
+    <echo file="${vertigo.properties}" message="vertigo.version=${vertigo.version}${line.separator}"/>
+    <echo file="${vertigo.properties}" message="vertigo.build.date=${build.date}${line.separator}" append="true"/>
+    <echo file="${vertigo.properties}" message="vertigo.build.number=${build.number}${line.separator}" append="true"/>
   </target>
 
   <target name="test">
@@ -110,51 +41,9 @@
     </exec>
   </target>
 
-  <target name="test-patches">
-    <exec executable="${java.path}/java">
-      <arg line="${java.args} --module coastwatch.vertigo/noaa.coastwatch.vertigo.Vertigo"/>
-      <arg value="--patches=500"/>
-      <arg value="--lineMode=${line.mode}"/>
-      <arg value="--demoMode=${demo.mode}"/>
-      <arg value="--axes=${axes}"/>
-    </exec>
-  </target>
-
-  <target name="test-texture">
-    <exec executable="${java.path}/java">
-      <arg line="${java.args} --module coastwatch.vertigo/noaa.coastwatch.vertigo.Vertigo"/>
-      <arg value="--lineMode=${line.mode}"/>
-      <arg value="--demoMode=${demo.mode}"/>
-      <arg value="--texture=${texture}"/>
-    </exec>
-  </target>
-
-  <target name="test-netcdf">
-    <exec executable="${java.path}/java">
-      <arg line="${java.args} --module coastwatch.vertigo/noaa.coastwatch.vertigo.Vertigo"/>
-      <arg value="--lineMode=${line.mode}"/>
-      <arg value="--demoMode=${demo.mode}"/>
-      <arg value="--axes=${axes}"/>
-      <arg value="--netcdf=${netcdf}"/>
-    </exec>
-  </target>
-
-  <target name="test-webmap">
-    <exec executable="${java.path}/java">
-      <arg line="${java.args} --module coastwatch.vertigo/noaa.coastwatch.vertigo.Vertigo"/>
-      <arg value="--lineMode=${line.mode}"/>
-      <arg value="--demoMode=${demo.mode}"/>
-      <arg value="--axes=${axes}"/>
-      <arg value="--webmap=${webmap}"/>
-    </exec>
-  </target>
-
   <target name="test-project">
     <exec executable="${java.path}/java">
       <arg line="${java.args} --module coastwatch.vertigo/noaa.coastwatch.vertigo.Vertigo"/>
-      <arg value="--lineMode=${line.mode}"/>
-      <arg value="--demoMode=${demo.mode}"/>
-      <arg value="--axes=${axes}"/>
       <arg value="--project=${project}"/>
     </exec>
   </target>
@@ -166,55 +55,6 @@
     </exec>
   </target>
 
-  <target name="runtime">
-    <delete dir="JavaRuntimeImage"/>
-    <exec executable="${java.path}/jlink">
-      <arg line="--output JavaRuntimeImage"/>
-      <arg line="--module-path javafx-jmods-14"/>
-      <arg line="--add-modules java.base,java.desktop,java.logging,javafx.controls"/>
-      <arg line="--strip-native-commands"/>
-      <arg line="--strip-debug"/>
-      <arg line="--no-man-pages"/>
-      <arg line="--no-header-files"/>
-    </exec>
-  </target>
-
-  <target name="dmg" depends="module,runtime">
-    <delete dir="Vertigo-0.5.dmg"/>
-    <exec executable="${java.path}/jpackage">
-      <arg line="--verbose"/>
-      <arg line="--type dmg"/>
-      <arg line="-n Vertigo"/>
-      <arg line="--module-path mod:lib"/>
-      <arg line="--module coastwatch.vertigo/noaa.coastwatch.vertigo.Vertigo"/>
-      <arg line="--java-options -Dprism.lcdtext=false"/>
-      <arg line="--app-version 0.5"/>
-      <arg value="--copyright"/>
-      <arg value="Copyright &#169; 2020 National Oceanic and Atmospheric Administration. All right reserved."/>
-      <arg line="--arguments --demoProject=true"/>
-      <arg line="--icon test/icons/earth2.icns"/>
-      <arg line="--runtime-image JavaRuntimeImage"/>
-    </exec>
-  </target>
-
-  <target name="app" depends="module,runtime">
-    <delete dir="Vertigo.app"/>
-    <exec executable="${java.path}/jpackage">
-      <arg line="--verbose"/>
-      <arg line="--type dmg"/>
-      <arg line="-n Vertigo"/>
-      <arg line="--module-path mod:lib"/>
-      <arg line="--module coastwatch.vertigo/noaa.coastwatch.vertigo.Vertigo"/>
-      <arg line="--java-options -Dprism.lcdtext=false"/>
-      <arg line="--app-version 0.5"/>
-      <arg value="--copyright"/>
-      <arg value="Copyright &#169; 2020 National Oceanic and Atmospheric Administration. All right reserved."/>
-      <arg line="--arguments --demoProject=true"/>
-      <arg line="--icon test/icons/earth2.icns"/>
-      <arg line="--runtime-image JavaRuntimeImage"/>
-    </exec>
-  </target>
-  
   <target name="zip" depends="module">
     <delete file="vertigo.zip"/>
     <zip destfile="vertigo.zip">

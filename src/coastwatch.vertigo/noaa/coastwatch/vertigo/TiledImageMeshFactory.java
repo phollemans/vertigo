@@ -180,7 +180,7 @@ public class TiledImageMeshFactory implements MeshFactory {
     // corners and four points for edge extrapolation.  In the case of
     // interior points, we access strided data over the inner region and
     // use two points to interpolate the pixel corner between them.
-    // Computations are done  by forming u and v vectors (in the x and y
+    // Computations are done by forming u and v vectors (in the x and y
     // directions) and then adding scaled versions of the u and v vectors
     // to existing model points.
     double[] p1 = new double[3];
@@ -414,7 +414,9 @@ public class TiledImageMeshFactory implements MeshFactory {
     // tile index with the data needed for a full resolution mesh of that
     // tile.
     int tileCount = tiling.getTiles();
-    LOGGER.fine ("Image tiling mesh has " + tileCount + " tiles of width " + tiling.tileWidth + " by height " + tiling.tileHeight);
+    LOGGER.fine ("Image tiling mesh has " + tileCount + " tiles of width " +
+      tiling.tileWidth + " by height " + tiling.tileHeight + " and " +
+      pointData.length/3 + " total mesh points");
     meshDescriptorMap = new HashMap<>();
     for (int tileIndex = 0; tileIndex < tileCount; tileIndex++) {
       

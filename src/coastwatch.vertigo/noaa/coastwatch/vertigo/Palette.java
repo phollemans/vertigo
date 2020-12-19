@@ -37,11 +37,19 @@ import java.util.logging.Level;
 
 /**
  * The <code>Palette</code> class reads and writes color palette XML files.
+ * The file has the structure:
+ * <pre>
+ *   palette name=... {
+ *     color r=... g=... b=...
+ *     color r=... g=... b=...
+ *     color r=... g=... b=...
+ *   }
+ * </pre>
  *
  * @author Peter Hollemans
  * @since 0.5
  */
-public class Palette {
+public class Palette extends BaseProjectObject {
 
   private static final Logger LOGGER = Logger.getLogger (Palette.class.getName());
 
@@ -50,9 +58,6 @@ public class Palette {
 
   /** The list of colors in this palette. */
   private List<Integer> colorList;
-
-  /** The palette name. */
-  private String name;
 
   /////////////////////////////////////////////////////////////////
 
@@ -100,9 +105,9 @@ public class Palette {
       expr = xpath.compile ("/palette");
       nodes = (NodeList) expr.evaluate (doc, XPathConstants.NODESET);
       Element element = (Element) nodes.item (0);
-      palette.name = element.getAttribute ("name");
+      palette.setName (element.getAttribute ("name"));
 
-      LOGGER.fine ("Read palette " + palette.name + " with " + palette.colorList.size() + " colors");
+      LOGGER.fine ("Read palette " + palette.getName() + " with " + palette.colorList.size() + " colors");
 
     } // try
     
@@ -158,22 +163,13 @@ public class Palette {
   ) {
 
     Palette palette = new Palette();
-    palette.name = name;
+    palette.setName (name);
     palette.colorList = new ArrayList<> (colorList);
     paletteCache.put (name, palette);
   
     return (palette);
   
   } // getInstance
-
-  /////////////////////////////////////////////////////////////////
-
-  /**
-   * Gets the name of this palette.
-   *
-   * @return the palette name.
-   */
-  public String getName() { return (name); }
 
   /////////////////////////////////////////////////////////////////
 

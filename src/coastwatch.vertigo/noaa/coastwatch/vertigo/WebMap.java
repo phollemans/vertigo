@@ -52,4 +52,13 @@ public interface WebMap {
    */
   ImageCoordinateSource getCoordinateSource();
 
+  /**
+   * Gets the source URL for the web map.
+   *
+   * @return the source URL.
+   *
+   * @since 0.6
+   */
+  String getSourceURL();
+
 } // WebMap class

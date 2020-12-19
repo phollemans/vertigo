@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		E90734B6256C8DC500AF286C /* DatasetListPane.fxml */ = {isa = PBXFileReference; lastKnownFileType = text; path = DatasetListPane.fxml; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
+		E90734B7256CD8C800AF286C /* DatasetListPaneController.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = DatasetListPaneController.java; sourceTree = "<group>"; };
+		E90734B8256CDA2700AF286C /* AreaListPane.fxml */ = {isa = PBXFileReference; lastKnownFileType = text; path = AreaListPane.fxml; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
+		E90734B9256CDB1700AF286C /* AreaListPaneController.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = AreaListPaneController.java; sourceTree = "<group>"; };
+		E90734BA256CE83500AF286C /* ResourceStatus.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ResourceStatus.java; sourceTree = "<group>"; };
 		E9125FBA24B7FE1C000B5CF1 /* GeoFunctionCoordinateSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeoFunctionCoordinateSource.java; sourceTree = "<group>"; };
 		E9125FBB24B9001B000B5CF1 /* WebMap.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = WebMap.java; sourceTree = "<group>"; };
 		E9125FBC24B9001B000B5CF1 /* SimpleWebMap.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SimpleWebMap.java; sourceTree = "<group>"; };
@@ -77,15 +82,62 @@
 		E93BA45A24FDC974009455F1 /* earth2.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = earth2.ico; sourceTree = "<group>"; };
 		E93BA45B24FDC974009455F1 /* vertigo.install4j */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vertigo.install4j; sourceTree = "<group>"; };
 		E950EFDA252C1FEC00C186CE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E950EFDB253297A500C186CE /* LogarithmicAxis.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = LogarithmicAxis.java; sourceTree = "<group>"; };
+		E950EFDC2532999E00C186CE /* IllegalLogarithmicRangeException.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = IllegalLogarithmicRangeException.java; sourceTree = "<group>"; };
+		E950EFDD2532E41900C186CE /* ColorScaleLegendFactory.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ColorScaleLegendFactory.java; sourceTree = "<group>"; };
 		E959983724E1EC8100C87F6D /* question@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "question@2x.png"; sourceTree = "<group>"; };
 		E959983824E1EC8200C87F6D /* question.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = question.png; sourceTree = "<group>"; };
-		E959983924E206CC00C87F6D /* help.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = help.txt; sourceTree = "<group>"; };
 		E959983B24ECF09A00C87F6D /* demo.vrtx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = demo.vrtx; sourceTree = "<group>"; };
+		E95D0B01257DB92F005A70DC /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
+		E95D0B02257DB92F005A70DC /* navigate_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigate_right.png; sourceTree = "<group>"; };
+		E95D0B03257DB92F005A70DC /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "folder@2x.png"; sourceTree = "<group>"; };
+		E95D0B04257DB92F005A70DC /* earth_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "earth_small@2x.png"; sourceTree = "<group>"; };
+		E95D0B05257DB92F005A70DC /* navigate_up_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigate_up_large@2x.png"; sourceTree = "<group>"; };
+		E95D0B06257DB92F005A70DC /* navigate_right_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigate_right_large@2x.png"; sourceTree = "<group>"; };
+		E95D0B07257DB92F005A70DC /* list_style_bullets@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "list_style_bullets@2x.png"; sourceTree = "<group>"; };
+		E95D0B08257DB92F005A70DC /* navigate_down_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigate_down_large@2x.png"; sourceTree = "<group>"; };
+		E95D0B09257DB92F005A70DC /* disconnect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disconnect@2x.png"; sourceTree = "<group>"; };
+		E95D0B0A257DB92F005A70DC /* navigate_right_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigate_right_large.png; sourceTree = "<group>"; };
+		E95D0B0B257DB92F005A70DC /* earth_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = earth_small.png; sourceTree = "<group>"; };
+		E95D0B0C257DB92F005A70DC /* navigate_left_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigate_left_large@2x.png"; sourceTree = "<group>"; };
+		E95D0B0D257DB92F005A70DC /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder.png; sourceTree = "<group>"; };
+		E95D0B0E257DB92F005A70DC /* navigate_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigate_right@2x.png"; sourceTree = "<group>"; };
+		E95D0B0F257DB92F005A70DC /* navigate_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigate_left.png; sourceTree = "<group>"; };
+		E95D0B10257DB930005A70DC /* sign_warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign_warning.png; sourceTree = "<group>"; };
+		E95D0B11257DB930005A70DC /* earth_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "earth_large@2x.png"; sourceTree = "<group>"; };
+		E95D0B12257DB930005A70DC /* navigate_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigate_left@2x.png"; sourceTree = "<group>"; };
+		E95D0B13257DB930005A70DC /* error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error@2x.png"; sourceTree = "<group>"; };
+		E95D0B14257DB930005A70DC /* flatscreen_tv@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flatscreen_tv@2x.png"; sourceTree = "<group>"; };
+		E95D0B15257DB930005A70DC /* list_style_bullets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_style_bullets.png; sourceTree = "<group>"; };
+		E95D0B16257DB930005A70DC /* disconnect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disconnect.png; sourceTree = "<group>"; };
+		E95D0B17257DB930005A70DC /* cw_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cw_logo@2x.png"; sourceTree = "<group>"; };
+		E95D0B18257DB930005A70DC /* cw_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cw_logo.png; sourceTree = "<group>"; };
+		E95D0B19257DB930005A70DC /* sign_warning@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sign_warning@2x.png"; sourceTree = "<group>"; };
+		E95D0B1A257DB930005A70DC /* navigate_left_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigate_left_large.png; sourceTree = "<group>"; };
+		E95D0B1B257DB930005A70DC /* earth_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = earth_large.png; sourceTree = "<group>"; };
+		E95D0B1C257DB930005A70DC /* flatscreen_tv.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flatscreen_tv.png; sourceTree = "<group>"; };
+		E95D0B1D257DB930005A70DC /* navigate_down_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigate_down_large.png; sourceTree = "<group>"; };
+		E95D0B1E257DB930005A70DC /* navigate_up_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigate_up_large.png; sourceTree = "<group>"; };
+		E95D173F258DB644009A3FB1 /* StarFieldFactory.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = StarFieldFactory.java; sourceTree = "<group>"; };
+		E95D1740258DFCB2009A3FB1 /* navigate_right_dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigate_right_dark@2x.png"; sourceTree = "<group>"; };
+		E95D1741258DFCB2009A3FB1 /* earth_small_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = earth_small_dark.png; sourceTree = "<group>"; };
+		E95D1742258DFCB2009A3FB1 /* earth_small_dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "earth_small_dark@2x.png"; sourceTree = "<group>"; };
+		E95D1743258DFCB2009A3FB1 /* earth_large_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = earth_large_dark.png; sourceTree = "<group>"; };
+		E95D1744258DFCB2009A3FB1 /* navigate_left_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigate_left_dark.png; sourceTree = "<group>"; };
+		E95D1745258DFCB2009A3FB1 /* disconnect_dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disconnect_dark@2x.png"; sourceTree = "<group>"; };
+		E95D1746258DFCB2009A3FB1 /* flatscreen_tv_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flatscreen_tv_dark.png; sourceTree = "<group>"; };
+		E95D1747258DFCB2009A3FB1 /* disconnect_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disconnect_dark.png; sourceTree = "<group>"; };
+		E95D1748258DFCB2009A3FB1 /* navigate_left_dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigate_left_dark@2x.png"; sourceTree = "<group>"; };
+		E95D1749258DFCB3009A3FB1 /* navigate_right_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigate_right_dark.png; sourceTree = "<group>"; };
+		E95D174A258DFCB3009A3FB1 /* earth_large_dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "earth_large_dark@2x.png"; sourceTree = "<group>"; };
+		E95D174B258DFCB3009A3FB1 /* flatscreen_tv_dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flatscreen_tv_dark@2x.png"; sourceTree = "<group>"; };
+		E95D174C258DFD8E009A3FB1 /* commonmark-0.16.2-SNAPSHOT.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "commonmark-0.16.2-SNAPSHOT.jar"; sourceTree = "<group>"; };
+		E95D174D258DFD8E009A3FB1 /* jsoup-1.13.1.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "jsoup-1.13.1.jar"; sourceTree = "<group>"; };
+		E95D174E258DFD8E009A3FB1 /* commonmark-ext-gfm-tables-0.16.2-SNAPSHOT.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "commonmark-ext-gfm-tables-0.16.2-SNAPSHOT.jar"; sourceTree = "<group>"; };
 		E96A8BEF24CD34A300BDD06E /* Project.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = Project.java; sourceTree = "<group>"; };
 		E96A8BF124CD373500BDD06E /* ProjectObjectBuilder.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ProjectObjectBuilder.java; sourceTree = "<group>"; };
 		E96A8BF224CD6E9700BDD06E /* GeoSurfaceFactory.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GeoSurfaceFactory.java; sourceTree = "<group>"; };
 		E96A8BF324CEA81D00BDD06E /* DatasetSurfaceFactory.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = DatasetSurfaceFactory.java; sourceTree = "<group>"; };
-		E96A8BF424D14F5900BDD06E /* GeoSurfaceFactoryBuilder.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GeoSurfaceFactoryBuilder.java; sourceTree = "<group>"; };
 		E96A8BF524D1554600BDD06E /* BaseProjectObjectBuilder.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = BaseProjectObjectBuilder.java; sourceTree = "<group>"; };
 		E96A8BF624D16D1200BDD06E /* Palette.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = Palette.java; sourceTree = "<group>"; };
 		E96A8BF724D175CA00BDD06E /* WebMapSurfaceFactory.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = WebMapSurfaceFactory.java; sourceTree = "<group>"; };
@@ -98,13 +150,13 @@
 		E96A8BFE24D77CAB00BDD06E /* Ocean-ice.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-ice.xml"; sourceTree = "<group>"; };
 		E96A8BFF24D77CAB00BDD06E /* Ocean-dense.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-dense.xml"; sourceTree = "<group>"; };
 		E96A8C0024D77CAB00BDD06E /* Ocean-algae.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-algae.xml"; sourceTree = "<group>"; };
-		E96A8C0124D77CAB00BDD06E /* NCCOS-chla.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "NCCOS-chla.xml"; sourceTree = "<group>"; };
+		E96A8C0124D77CAB00BDD06E /* Chlorophyll.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Chlorophyll.xml; sourceTree = "<group>"; };
 		E96A8C0224D77CAB00BDD06E /* Ocean-delta.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-delta.xml"; sourceTree = "<group>"; };
 		E96A8C0324D77CAB00BDD06E /* Ocean-speed.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-speed.xml"; sourceTree = "<group>"; };
 		E96A8C0424D77CAB00BDD06E /* Ocean-tempo.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-tempo.xml"; sourceTree = "<group>"; };
 		E96A8C0524D77CAB00BDD06E /* Ocean-phase.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-phase.xml"; sourceTree = "<group>"; };
 		E96A8C0624D77CAB00BDD06E /* Ocean-matter.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-matter.xml"; sourceTree = "<group>"; };
-		E96A8C0724D77CAB00BDD06E /* Blue-red.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Blue-red.xml"; sourceTree = "<group>"; };
+		E96A8C0724D77CAB00BDD06E /* Blue-Red.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Blue-Red.xml"; sourceTree = "<group>"; };
 		E96A8C0824D77CAB00BDD06E /* BW-Linear.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "BW-Linear.xml"; sourceTree = "<group>"; };
 		E96A8C0924D77CAB00BDD06E /* Ocean-balance.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-balance.xml"; sourceTree = "<group>"; };
 		E96A8C0A24D77CAC00BDD06E /* Ocean-amp.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-amp.xml"; sourceTree = "<group>"; };
@@ -122,7 +174,18 @@
 		E96A8C1624D7F30D00BDD06E /* Area.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = Area.java; sourceTree = "<group>"; };
 		E96A8C1724D7F4D900BDD06E /* AreaBuilder.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = AreaBuilder.java; sourceTree = "<group>"; };
 		E96A8C1824DA750E00BDD06E /* ProjectController.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ProjectController.java; sourceTree = "<group>"; };
-		E9EF73A924C4BA5000E1A684 /* styles.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = styles.css; sourceTree = "<group>"; };
+		E97BB77B2581F37000729B5D /* vertigo_light.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = vertigo_light.css; sourceTree = "<group>"; };
+		E97BB77C2588539E00729B5D /* DaemonThreadFactory.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = DaemonThreadFactory.java; sourceTree = "<group>"; };
+		E97BB77D2589FB0A00729B5D /* help.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = help.md; sourceTree = "<group>"; };
+		E97BB77E258AD7CC00729B5D /* markdown.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = markdown.css; sourceTree = "<group>"; };
+		E9B37F58254379BF00AB166F /* Vertigo.fxml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Vertigo.fxml; sourceTree = "<group>"; };
+		E9B37F5F254379F500AB166F /* VertigoController.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = VertigoController.java; sourceTree = "<group>"; };
+		E9B37F602546680C00AB166F /* vertigo_dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = vertigo_dark.css; sourceTree = "<group>"; };
+		E9FF4751256250A7005400BB /* DatasetSurfaceFactoryBuilder.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = DatasetSurfaceFactoryBuilder.java; sourceTree = "<group>"; };
+		E9FF4752256254A8005400BB /* WebMapSurfaceFactoryBuilder.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = WebMapSurfaceFactoryBuilder.java; sourceTree = "<group>"; };
+		E9FF475325625C37005400BB /* DatasetSurfacePaneController.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = DatasetSurfacePaneController.java; sourceTree = "<group>"; };
+		E9FF4754256263FC005400BB /* DatasetSurfacePane.fxml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = DatasetSurfacePane.fxml; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
+		E9FF4755256339D3005400BB /* BaseProjectObject.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = BaseProjectObject.java; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -142,6 +205,9 @@
 		E93B71B324AD21D4001CDBC4 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				E95D174C258DFD8E009A3FB1 /* commonmark-0.16.2-SNAPSHOT.jar */,
+				E95D174E258DFD8E009A3FB1 /* commonmark-ext-gfm-tables-0.16.2-SNAPSHOT.jar */,
+				E95D174D258DFD8E009A3FB1 /* jsoup-1.13.1.jar */,
 				E93B71B424AD21D4001CDBC4 /* shapefilereader-1.0.jar */,
 				E93B71B524AD21D4001CDBC4 /* slf4j-nop-1.7.9.jar */,
 				E93B71B624AD21D4001CDBC4 /* javadbf-1.10.1.jar */,
@@ -189,13 +255,20 @@
 			children = (
 				E96A8C1624D7F30D00BDD06E /* Area.java */,
 				E96A8C1724D7F4D900BDD06E /* AreaBuilder.java */,
+				E90734B9256CDB1700AF286C /* AreaListPaneController.java */,
+				E9FF4755256339D3005400BB /* BaseProjectObject.java */,
 				E96A8BFB24D53DD500BDD06E /* BaseProjectViewObject.java */,
 				E96A8BF524D1554600BDD06E /* BaseProjectObjectBuilder.java */,
+				E950EFDD2532E41900C186CE /* ColorScaleLegendFactory.java */,
 				E9125FBF24BED719000B5CF1 /* ColorTileWriter.java */,
 				E93B73E024AD21E4001CDBC4 /* ComponentTileWriter.java */,
+				E97BB77C2588539E00729B5D /* DaemonThreadFactory.java */,
 				E9125FC024BEDEB5000B5CF1 /* DataConverter.java */,
 				E93B73D624AD21E4001CDBC4 /* Dataset.java */,
+				E90734B7256CD8C800AF286C /* DatasetListPaneController.java */,
 				E96A8BF324CEA81D00BDD06E /* DatasetSurfaceFactory.java */,
+				E9FF4751256250A7005400BB /* DatasetSurfaceFactoryBuilder.java */,
+				E9FF475325625C37005400BB /* DatasetSurfacePaneController.java */,
 				E9125FC124BEF064000B5CF1 /* DoubleToColorConverter.java */,
 				E93B73FD24AD21E5001CDBC4 /* DynamicNode.java */,
 				E93B73DC24AD21E4001CDBC4 /* DynamicSurface.java */,
@@ -206,10 +279,10 @@
 				E93B73F224AD21E5001CDBC4 /* GeoDataCoordinateSource.java */,
 				E9125FBA24B7FE1C000B5CF1 /* GeoFunctionCoordinateSource.java */,
 				E96A8BF224CD6E9700BDD06E /* GeoSurfaceFactory.java */,
-				E96A8BF424D14F5900BDD06E /* GeoSurfaceFactoryBuilder.java */,
 				E96A8BFC24D6973F00BDD06E /* GeoSurfaceHandler.java */,
 				E96A8BF824D407DD00BDD06E /* GeoSurfaceViewContext.java */,
 				E93B73DD24AD21E4001CDBC4 /* Helpers.java */,
+				E950EFDC2532999E00C186CE /* IllegalLogarithmicRangeException.java */,
 				E93B73FE24AD21E5001CDBC4 /* ImageAccess.java */,
 				E93B73DA24AD21E4001CDBC4 /* ImageAccessResult.java */,
 				E93B73ED24AD21E4001CDBC4 /* ImageCoordinateIterator.java */,
@@ -221,6 +294,7 @@
 				E93B73FC24AD21E5001CDBC4 /* ImageTilingTree.java */,
 				E9125FC224BEF515000B5CF1 /* IntegerPassThroughConverter.java */,
 				E93B73E724AD21E4001CDBC4 /* LevelOfDetailFactory.java */,
+				E950EFDB253297A500C186CE /* LogarithmicAxis.java */,
 				E93B73FF24AD21E5001CDBC4 /* MeshFactory.java */,
 				E93B73E224AD21E4001CDBC4 /* MeshObjectFactory.java */,
 				E93B73DF24AD21E4001CDBC4 /* NetCDFDataSource.java */,
@@ -234,21 +308,25 @@
 				E96A8BF924D5399700BDD06E /* ProjectObject.java */,
 				E96A8BFA24D53A3100BDD06E /* ProjectViewObject.java */,
 				E96A8BF124CD373500BDD06E /* ProjectObjectBuilder.java */,
+				E90734BA256CE83500AF286C /* ResourceStatus.java */,
 				E93B73E324AD21E4001CDBC4 /* RowIterator.java */,
 				E93B73F324AD21E5001CDBC4 /* SceneOctTree.java */,
 				E9125FBC24B9001B000B5CF1 /* SimpleWebMap.java */,
 				E93B73DE24AD21E4001CDBC4 /* SphereFunctions.java */,
 				E93B73E824AD21E4001CDBC4 /* SphereTranslator.java */,
+				E95D173F258DB644009A3FB1 /* StarFieldFactory.java */,
 				E93B73E424AD21E4001CDBC4 /* TextureFactory.java */,
 				E93B73F924AD21E5001CDBC4 /* TiledImageFacetDataSource.java */,
 				E93B73D824AD21E4001CDBC4 /* TiledImageMeshFactory.java */,
 				E93B73DB24AD21E4001CDBC4 /* TiledImageTextureFactory.java */,
 				E93B73E624AD21E4001CDBC4 /* Vertigo.java */,
+				E9B37F5F254379F500AB166F /* VertigoController.java */,
 				E93B73EC24AD21E4001CDBC4 /* ViewProperties.java */,
 				E9125FBB24B9001B000B5CF1 /* WebMap.java */,
 				E9125FBE24BE93EF000B5CF1 /* WebMapCoordinateSource.java */,
 				E9125FBD24BE5CFA000B5CF1 /* WebMapDataSource.java */,
 				E96A8BF724D175CA00BDD06E /* WebMapSurfaceFactory.java */,
+				E9FF4752256254A8005400BB /* WebMapSurfaceFactoryBuilder.java */,
 				E93B73F524AD21E5001CDBC4 /* WorldController.java */,
 				E93B740024AD21E5001CDBC4 /* WorldModel.java */,
 				E93B73E524AD21E4001CDBC4 /* WorldTester.java */,
@@ -303,12 +381,63 @@
 		E9EF73A724C4B9E300E1A684 /* vertigo */ = {
 			isa = PBXGroup;
 			children = (
-				E96A8C0724D77CAB00BDD06E /* Blue-red.xml */,
-				E96A8C0824D77CAB00BDD06E /* BW-Linear.xml */,
+				E9B37F602546680C00AB166F /* vertigo_dark.css */,
+				E97BB77B2581F37000729B5D /* vertigo_light.css */,
+				E95D1747258DFCB2009A3FB1 /* disconnect_dark.png */,
+				E95D1745258DFCB2009A3FB1 /* disconnect_dark@2x.png */,
+				E95D1743258DFCB2009A3FB1 /* earth_large_dark.png */,
+				E95D174A258DFCB3009A3FB1 /* earth_large_dark@2x.png */,
+				E95D1741258DFCB2009A3FB1 /* earth_small_dark.png */,
+				E95D1742258DFCB2009A3FB1 /* earth_small_dark@2x.png */,
+				E95D1746258DFCB2009A3FB1 /* flatscreen_tv_dark.png */,
+				E95D174B258DFCB3009A3FB1 /* flatscreen_tv_dark@2x.png */,
+				E95D1744258DFCB2009A3FB1 /* navigate_left_dark.png */,
+				E95D1748258DFCB2009A3FB1 /* navigate_left_dark@2x.png */,
+				E95D1749258DFCB3009A3FB1 /* navigate_right_dark.png */,
+				E95D1740258DFCB2009A3FB1 /* navigate_right_dark@2x.png */,
+				E95D0B18257DB930005A70DC /* cw_logo.png */,
+				E95D0B17257DB930005A70DC /* cw_logo@2x.png */,
+				E95D0B16257DB930005A70DC /* disconnect.png */,
+				E95D0B09257DB92F005A70DC /* disconnect@2x.png */,
+				E95D0B1B257DB930005A70DC /* earth_large.png */,
+				E95D0B11257DB930005A70DC /* earth_large@2x.png */,
+				E95D0B0B257DB92F005A70DC /* earth_small.png */,
+				E95D0B04257DB92F005A70DC /* earth_small@2x.png */,
+				E95D0B01257DB92F005A70DC /* error.png */,
+				E95D0B13257DB930005A70DC /* error@2x.png */,
+				E95D0B1C257DB930005A70DC /* flatscreen_tv.png */,
+				E95D0B14257DB930005A70DC /* flatscreen_tv@2x.png */,
+				E95D0B0D257DB92F005A70DC /* folder.png */,
+				E95D0B03257DB92F005A70DC /* folder@2x.png */,
+				E95D0B15257DB930005A70DC /* list_style_bullets.png */,
+				E95D0B07257DB92F005A70DC /* list_style_bullets@2x.png */,
+				E95D0B1D257DB930005A70DC /* navigate_down_large.png */,
+				E95D0B08257DB92F005A70DC /* navigate_down_large@2x.png */,
+				E95D0B1A257DB930005A70DC /* navigate_left_large.png */,
+				E95D0B0C257DB92F005A70DC /* navigate_left_large@2x.png */,
+				E95D0B0F257DB92F005A70DC /* navigate_left.png */,
+				E95D0B12257DB930005A70DC /* navigate_left@2x.png */,
+				E95D0B0A257DB92F005A70DC /* navigate_right_large.png */,
+				E95D0B06257DB92F005A70DC /* navigate_right_large@2x.png */,
+				E95D0B02257DB92F005A70DC /* navigate_right.png */,
+				E95D0B0E257DB92F005A70DC /* navigate_right@2x.png */,
+				E95D0B1E257DB930005A70DC /* navigate_up_large.png */,
+				E95D0B05257DB92F005A70DC /* navigate_up_large@2x.png */,
+				E959983824E1EC8200C87F6D /* question.png */,
+				E959983724E1EC8100C87F6D /* question@2x.png */,
+				E95D0B10257DB930005A70DC /* sign_warning.png */,
+				E95D0B19257DB930005A70DC /* sign_warning@2x.png */,
 				E959983B24ECF09A00C87F6D /* demo.vrtx */,
-				E959983924E206CC00C87F6D /* help.txt */,
+				E97BB77D2589FB0A00729B5D /* help.md */,
+				E97BB77E258AD7CC00729B5D /* markdown.css */,
+				E90734B8256CDA2700AF286C /* AreaListPane.fxml */,
+				E90734B6256C8DC500AF286C /* DatasetListPane.fxml */,
+				E9FF4754256263FC005400BB /* DatasetSurfacePane.fxml */,
+				E9B37F58254379BF00AB166F /* Vertigo.fxml */,
+				E96A8C0724D77CAB00BDD06E /* Blue-Red.xml */,
+				E96A8C0824D77CAB00BDD06E /* BW-Linear.xml */,
 				E96A8C0F24D77CAC00BDD06E /* HSL256.xml */,
-				E96A8C0124D77CAB00BDD06E /* NCCOS-chla.xml */,
+				E96A8C0124D77CAB00BDD06E /* Chlorophyll.xml */,
 				E96A8C0024D77CAB00BDD06E /* Ocean-algae.xml */,
 				E96A8C0A24D77CAC00BDD06E /* Ocean-amp.xml */,
 				E96A8C0924D77CAB00BDD06E /* Ocean-balance.xml */,
@@ -328,10 +457,7 @@
 				E96A8C0C24D77CAC00BDD06E /* Ocean-thermal.xml */,
 				E96A8C0D24D77CAC00BDD06E /* Ocean-topo.xml */,
 				E96A8C0E24D77CAC00BDD06E /* Ocean-turbid.xml */,
-				E959983824E1EC8200C87F6D /* question.png */,
-				E959983724E1EC8100C87F6D /* question@2x.png */,
 				E96A8C1124D77CAC00BDD06E /* Wind-0-50.xml */,
-				E9EF73A924C4BA5000E1A684 /* styles.css */,
 			);
 			path = vertigo;
 			sourceTree = "<group>";

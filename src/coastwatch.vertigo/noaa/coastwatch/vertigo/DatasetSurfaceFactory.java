@@ -7,12 +7,18 @@
 package noaa.coastwatch.vertigo;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import java.io.IOException;
+
+import javafx.scene.layout.Region;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -55,6 +61,48 @@ public class DatasetSurfaceFactory extends BaseProjectViewObject implements GeoS
   /** The pixels high of the image data for the surface. */
   private int height;
 
+  /** The legend factory to use for the surface. */
+  private ObjectProperty<ColorScaleLegendFactory> legendFactoryProp;
+  
+  /** The units reported for the level values. */
+  private String levelUnits;
+  
+  /** The data credit. */
+  private String dataCredit;
+  
+  /** The list of variables in the dataset. */
+  private List<String> variableList;
+
+  /** The list of extra init tasks to perform during initialization. */
+  private List<Runnable> initTasks;
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public void addInitTask (Runnable task) { initTasks.add (task); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the legend factory used to create legends for surfaces.
+   *
+   * @param legendFactory the legend factory property.
+   *
+   * @since 0.6
+   */
+  public ReadOnlyObjectProperty<ColorScaleLegendFactory> legendFactoryProperty() { return (legendFactoryProp); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the list of variables in the dataset used by this factory.
+   *
+   * @return the list of variables.
+   *
+   * @since 0.6
+   */
+  public List<String> getVariableList () { return (variableList); }
+
   /////////////////////////////////////////////////////////////////
 
   /**
@@ -75,7 +123,11 @@ public class DatasetSurfaceFactory extends BaseProjectViewObject implements GeoS
     this.dataset = dataset;
     this.variable = variable;
     this.converter = converter;
+    var legendFactory = new ColorScaleLegendFactory();
+    legendFactory.converterProperty().setValue (converter);
+    legendFactoryProp = new SimpleObjectProperty<> (this, "legendFactory", legendFactory);
     this.viewContext = viewContext;
+    this.initTasks = new ArrayList<>();
     
   } // DatasetSurfaceFactory
 
@@ -96,15 +148,19 @@ public class DatasetSurfaceFactory extends BaseProjectViewObject implements GeoS
     // Before anything else, see if we are already initialized.
     if (isInitialized()) return;
 
-    // First check the dataset and see if the variable we need is there.
-    var variables = dataset.getVariables();
-    LOGGER.fine ("Dataset has " + variables.size() + " variable(s)");
-    if (!variables.contains (variable))
-      throw new IOException ("Dataset does not contain requested variable " + variable);
+    // Run the init tasks if there are any
+    for (var task : initTasks) task.run();
 
+    // First check the dataset and see if the variable we need is there.
+    variableList = dataset.getVariables();
+    LOGGER.fine ("Dataset has " + variableList.size() + " variable(s)");
+    if (!variableList.contains (variable))
+      throw new IOException ("Dataset does not contain requested variable " + variable);
+      
     // Next store the time, level, and dimension information.
     timeList = dataset.getTimes (variable);
     levelList = dataset.getLevels (variable);
+    levelUnits = dataset.getLevelUnits (variable);
     coordSource = dataset.getCoordinateSource (variable);
     int[] dims = dataset.getDimensions (variable);
     width = dims[0];
@@ -128,6 +184,17 @@ public class DatasetSurfaceFactory extends BaseProjectViewObject implements GeoS
       );
       
     } // if
+
+    // Create the legend label for the variable
+    var atts = dataset.getAttributes (variable);
+    String label = (String) atts.get ("long_name");
+    if (label == null) label = variable;
+    String units = (String) atts.get ("units");
+    if (units != null && !units.isBlank()) label += " (" + units + ")";
+    legendFactoryProp.getValue().labelProperty().setValue (label);
+
+    // Get the data credit
+    dataCredit = (String) dataset.getGlobalAttributes().get ("institution");
 
   } // initialize
   
@@ -183,6 +250,26 @@ public class DatasetSurfaceFactory extends BaseProjectViewObject implements GeoS
     return (surface);
   
   } // createSurface
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public Region getLegend() { return (legendFactoryProp.getValue().createLegend()); }
+  
+  /////////////////////////////////////////////////////////////////
+  
+  @Override
+  public String getLevelUnits() { return (levelUnits); }
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public String getCredit() { return (dataCredit); }
+
+  /////////////////////////////////////////////////////////////////
+
+//  @Override
+//  public String getSourceUrl() { return (getSpec().get ("url") + ".html"); }
 
   /////////////////////////////////////////////////////////////////
 

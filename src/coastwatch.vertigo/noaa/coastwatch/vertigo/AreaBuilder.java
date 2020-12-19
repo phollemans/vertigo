@@ -15,7 +15,7 @@ package noaa.coastwatch.vertigo;
  */
 public class AreaBuilder extends BaseProjectObjectBuilder {
 
-  private static final String TYPE = "area";
+  private static final String TYPE = "Area";
   
   /////////////////////////////////////////////////////////////////
 
@@ -25,16 +25,19 @@ public class AreaBuilder extends BaseProjectObjectBuilder {
   /////////////////////////////////////////////////////////////////
 
   @Override
-  public Object getObject() {
+  public ProjectObject getObject() {
 
     String name = (String) require ("name");
     double lat = (Double) require ("latitude");
     double lon = (Double) require ("longitude");
     double extent = (Double) require ("extent");
-    Object obj = new Area (name, lat, lon, extent);
+    String group = (String) require ("group");
+    var area = new Area (lat, lon, extent);
+    area.setName (name);
+    area.setGroup (group);
 
-    propertyMap.clear();
-    return (obj);
+    complete (area);
+    return (area);
 
   } // getObject
 

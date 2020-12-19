@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ProgressIndicator?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+
+<?import javafx.collections.FXCollections?>
+
+<?import java.lang.String?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+  fx:controller="noaa.coastwatch.vertigo.DatasetSurfacePaneController"
+  fx:id="rootPane">
+
+  <VBox spacing="8" style="-fx-padding: 16 16 8 16">
+
+    <!-- Dataset name -->
+
+    <Label text="Name"/>
+    <TextField fx:id="nameField"/>
+
+    <Separator style="-fx-padding: 10 0 5 0"/>
+
+    <!-- Data source details -->
+
+    <HBox spacing="10">
+      <Label text="Data Source"/>
+      <ProgressIndicator maxWidth="16" maxHeight="16" visible="false"/>
+    </HBox>
+
+    <HBox>
+      <TextField fx:id="fileField" promptText="Enter URL or select file" onAction="#handleFileField"/>
+      <Button onAction="#handleOpenDataFileButton">
+        <tooltip><Tooltip text="Open data file."/></tooltip>
+        <graphic>
+          <ImageView styleClass="icon-shadow"><image><Image url="@folder.png"/></image></ImageView>
+        </graphic>
+      </Button>
+    </HBox>
+
+    <ComboBox fx:id="variableCombo">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="sea_surface_temperature"/>
+          <String fx:value="l2_flags"/>
+          <String fx:value="cloud"/>
+          <String fx:value="ice_concentration"/>
+        </FXCollections>
+      </items>
+    </ComboBox>
+
+    <Separator style="-fx-padding: 10 0 5 0"/>
+
+    <Label text="Color Scale"/>
+
+    <ComboBox fx:id="paletteCombo" value="BW-Linear">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="BW-Linear"/>
+          <String fx:value="Blue-Red"/>
+          <String fx:value="HSL256"/>
+          <String fx:value="Chlorophyll"/>
+          <String fx:value="Wind-0-50"/>
+          <String fx:value="Ocean-algae"/>
+          <String fx:value="Ocean-amp"/>
+          <String fx:value="Ocean-balance"/>
+          <String fx:value="Ocean-curl"/>
+          <String fx:value="Ocean-deep"/>
+          <String fx:value="Ocean-delta"/>
+          <String fx:value="Ocean-dense"/>
+          <String fx:value="Ocean-gray"/>
+          <String fx:value="Ocean-haline"/>
+          <String fx:value="Ocean-ice"/>
+          <String fx:value="Ocean-matter"/>
+          <String fx:value="Ocean-oxy"/>
+          <String fx:value="Ocean-phase"/>
+          <String fx:value="Ocean-solar"/>
+          <String fx:value="Ocean-speed"/>
+          <String fx:value="Ocean-tempo"/>
+          <String fx:value="Ocean-thermal"/>
+          <String fx:value="Ocean-topo"/>
+          <String fx:value="Ocean-turbid"/>
+        </FXCollections>
+      </items>
+    </ComboBox>
+
+    <HBox alignment="CENTER">
+      <Label text="Minimum"/>
+      <Region HBox.hgrow="ALWAYS"/>
+      <TextField fx:id="minField" minWidth="80" maxWidth="80"/>
+    </HBox>
+
+    <HBox alignment="CENTER">
+      <Label text="Maximum"/>
+      <Region HBox.hgrow="ALWAYS"/>
+      <TextField fx:id="maxField" minWidth="80" maxWidth="80"/>
+    </HBox>
+
+    <CheckBox fx:id="logCheck" text="Logarithmic Scale"/>
+
+    <Separator style="-fx-padding: 10 0 5 0"/>
+
+    <HBox alignment="CENTER" spacing="5">
+      <Button text="Apply" onAction="#handleApplyButton" prefWidth="70"/>
+      <Button text="Revert" onAction="#handleRevertButton" prefWidth="70"/>
+    </HBox>
+
+  </VBox>
+
+</VBox>
+

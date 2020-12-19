@@ -8,6 +8,7 @@ package noaa.coastwatch.vertigo;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collections;
 
 /**
  * The <code>BaseProjectViewObject</code> is the base class for all project
@@ -16,13 +17,9 @@ import java.util.HashMap;
  * @author Peter Hollemans
  * @since 0.5
  */
-public class BaseProjectViewObject implements ProjectViewObject {
+public class BaseProjectViewObject extends BaseProjectObject implements ProjectViewObject {
 
-  private String name;
   private Map<String, Object> config = new HashMap<>();
-
-  public String getName() { return (name); }
-  public void setName (String name) { this.name = name; }
 
   public Object getConfig (String name) { return (config.get (name)); }
   public void setConfig (String name, Object value) { config.put (name, value); }

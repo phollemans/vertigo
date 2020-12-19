@@ -20,7 +20,10 @@ import java.util.HashMap;
 public abstract class BaseProjectObjectBuilder implements ProjectObjectBuilder {
 
   /** The list of properties collected for the next object production. */
-  protected Map<String, Object> propertyMap = new HashMap<>();
+  private Map<String, Object> propertyMap = new HashMap<>();
+
+  /** The list of properties that have been requested. */
+  private Map<String, Object> specMap = new HashMap<>();
 
   /////////////////////////////////////////////////////////////////
 
@@ -78,9 +81,56 @@ public abstract class BaseProjectObjectBuilder implements ProjectObjectBuilder {
     if (accepted != null && !accepted.contains (value))
       throw new RuntimeException ("Object builder " + getTypeName() + " property '" + property + "' has invalid value '" + value + "'");
     
+    specMap.put (property, value);
+    
     return (value);
   
   } // require
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the current set of property names in the map.
+   *
+   * @return the property names.
+   *
+   * @since 0.6
+   */
+  protected Set<String> properties () { return (propertyMap.keySet()); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Completes the builder operation by clearing the property map and
+   * transferring the build specifications to the object.
+   *
+   * @since 0.6
+   */
+  protected void complete (
+    ProjectObject object
+  ) {
+  
+    propertyMap.clear();
+    object.setSpec (specMap);
+    specMap.clear();
+    
+  } // complete
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public String toString () {
+
+    StringBuilder builder = new StringBuilder();
+    builder.append ("BaseProjectObjectBuilder[");
+    if (propertyMap.size() != 0) {
+      propertyMap.keySet().forEach (key -> builder.append (key + "=" + propertyMap.get (key) + ","));
+      builder.deleteCharAt (builder.length()-1);
+    } // if
+    builder.append ("]");
+    return (builder.toString());
+  
+  } // toString
 
   /////////////////////////////////////////////////////////////////
 

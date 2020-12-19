@@ -24,7 +24,11 @@ import javafx.scene.paint.PhongMaterial;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import javafx.application.Platform;
 
@@ -90,6 +94,40 @@ public class DynamicSurface {
    * or false if not.
    */
   private boolean isActive;
+
+  /** The current progress of the surface updating in the range [0..1]. */
+  private DoubleProperty progressProp;
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the progress property indicating the progress of the surface updating
+   * in the range [0..1] where 0 is not updated at all and 1 is completely
+   * updated.
+   *
+   * @return the progress property.
+   *
+   * @since 0.6
+   */
+  public ReadOnlyDoubleProperty progressProperty () { return (progressProp); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Computes an estimate of the memory used by this surface.
+   *
+   * @return the memory in bytes.
+   *
+   * @since 0.6
+   */
+  public long totalMemory () {
+
+    long memory = 0;
+    for (var facet : facetList) memory += facet.totalMemory();
+    
+    return (memory);
+
+  } // totalMemory
 
   /////////////////////////////////////////////////////////////////
 
@@ -157,6 +195,10 @@ public class DynamicSurface {
     // Listen for changes in the camera position and update the
     // facets as needed
     cameraListener = (obs, oldVal, newVal) -> update();
+    
+    // Create the progress property.  Later in initialize(), we bind the
+    // facet updating states to the value of this property.
+    progressProp = new SimpleDoubleProperty();
     
   } // DynamicSurface
 
@@ -229,15 +271,101 @@ public class DynamicSurface {
           update();
         } // if
       });
-      facet.update (lowestMeshLevel, -1);
     } // for
-  
+
+    // Create a listener for facet updating that updates the progress property
+    // accordingly.
+    var updater = new ProgressUpdater (facetInitList);
+    for (var facet : facetInitList) facet.updatingProperty().addListener (updater);
+
+    // Start the actual process of each facet updating.  This completes
+    // the initialization.
+    for (var facet : facetInitList) facet.update (lowestMeshLevel, -1);
+
   } // initialize
 
   /////////////////////////////////////////////////////////////////
 
-  /** Updates the surface facets using the current camera position property. */
-  private void update () {
+  /**
+   * Listens for changes to the facet updating state and updates the
+   * progress property accordingly.
+   *
+   * @since 0.6
+   */
+  private class ProgressUpdater implements ChangeListener<Boolean> {
+  
+    private Thread progressUpdateThread;
+    private boolean newChange;
+    private List<Facet> facetList;
+
+    /** Initializes the updater with the list of facets to monitor. */
+    public ProgressUpdater (List<Facet> facetList) {
+      this.facetList = new ArrayList<> (facetList);
+    } // ProgressUpdater
+
+    @Override
+    public void changed (ObservableValue obs, Boolean oldVal, Boolean newVal) {
+      newChange = true;
+      processChange();
+    } // changed
+    
+    /** Processes any changes that have occurred. */
+    private void processChange() {
+      if (newChange && progressUpdateThread == null) {
+        progressUpdateThread = new Thread (() -> updateProgress());
+        newChange = false;
+        progressUpdateThread.start();
+      } // if
+    } // processChange
+      
+    /** Updates the progress property from a background thread. */
+    private void updateProgress () {
+
+      // Find the number of visible facets that are not currently updating.
+      int completedCount = 0;
+      int visibleFacets = 0;
+      for (var facet : facetList) {
+        var node = facet.getNode();
+        if (node != null && node.isVisible()) {
+          if (!facet.isUpdating()) completedCount++;
+          visibleFacets++;
+        } // if
+      } // for
+
+      // Compute the non-updating facets as a fraction of the total visible.
+      // If there are no visible facets, we mark the progress complete.
+      double progress;
+      if (visibleFacets == 0) progress = 1;
+      else {
+        progress = (double) completedCount / visibleFacets;
+      } // else
+      final double progressValue = progress;
+  
+      // Update the progress property on the JavaFX thread and process any
+      // changes we may have missed while inside this method.
+      Platform.runLater (() -> {
+        progressProp.setValue (progressValue);
+        progressUpdateThread = null;
+        if (newChange) processChange();
+      });
+  
+    } // updateProgress
+  
+  } // ProgressUpdater class
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Updates the surface facets using the current camera position property.
+   * Normally this is automatically called when the surface is active and
+   * the camera position is updated.  However, some facet updates may be
+   * required even if the camera position has not changed, for example a
+   * change in view size has caused some facets to change visibility, and
+   * the newly visible facets need to be updated.
+   *
+   * @since 0.6
+   */
+  public void update () {
 
     if (cameraPositionProp.get() == null) {
       LOGGER.warning ("Update called with no camera position set");
@@ -245,7 +373,7 @@ public class DynamicSurface {
     } // if
     
     // Check if we are creating facets for the first time.  If so we need
-    // to initialize first.  Then we'll be send back to this point after
+    // to initialize first.  Then we'll be sent back to this point after
     // initialization.
     if (facetList.size() == 0) initialize();
 

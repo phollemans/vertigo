@@ -58,6 +58,17 @@ public interface Dataset {
   ) throws IOException;
 
   /**
+   * Gets the vertical level units for a variable in this dataset.
+   *
+   * @return the vertical level measurement units, or null for none.
+   *
+   * @since 0.6
+   */
+  String getLevelUnits (
+    String varName
+  ) throws IOException;
+
+  /**
    * Gets the 2D (x,y) dimensions for a variable in this dataset.
    *
    * @param varName the variable to get dimensions.
@@ -79,6 +90,16 @@ public interface Dataset {
   Map<String, Object> getAttributes (
     String varName
   ) throws IOException;
+
+  /**
+   * Gets the global attributes available for this dataset.  Global attributes
+   * are names and values that describe the dataset as a whole.
+   *
+   * @return the map of attribute names to values.
+   *
+   * @since 0.6
+   */
+  Map<String, Object> getGlobalAttributes () throws IOException;
 
   /**
    * Gets the image data source for a time and level of a variable in this

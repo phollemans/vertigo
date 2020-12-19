@@ -15,6 +15,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
+import javafx.stage.Screen;
+
 import javafx.geometry.Point3D;
 
 import javafx.event.EventType;
@@ -153,7 +155,7 @@ public class WorldView {
     
      // Create the scene and add the camera
     scene = new SubScene (root, 500, 500, false, SceneAntialiasing.BALANCED);
-    scene.setFill (Color.BLACK);
+    scene.setFill (Color.rgb (2, 2, 8));
     scene.setCamera (camera);
 
   } // WorldView
@@ -211,21 +213,51 @@ public class WorldView {
    * @param level the new zoom level in the range [minZoomLevel(),
    * maxZoomLevel()].
    */
-  public void setZoom (double level) {
+  private void setZoom (double level) {
 
     // Zoom 0 -> 100: max camera distance -> min camera distance
     // Zoom level is not linear, depends on distance from surface
     // of world.
-    
+
+    // Compute the z value and update the far clipping plane, because we
+    // really only want to show objects on the near side of the world.
     double z = A*Math.sqrt (level) + B;
+    camera.setFarClip (-z);
+
+//camera.setFarClip (100);
+
+    // Update the camera z
     cameraZProp.setValue (z);
     if (LOGGER.isLoggable (Level.FINEST)) LOGGER.finest ("Camera Z = " + z);
 
-    // Now we also update the far clipping plane, because we really only
-    // want to show objects on the near side of the world.
-    camera.setFarClip (-z);
-
   } // setZoom
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the zoom level for the specified camera distance.
+   *
+   * @param dist the camera distance in graphics system model units in the
+   * range [minCameraDistance(), maxCameraDistance()].
+   *
+   * @return the zoom level for the specified distance.
+   *
+   * @since 0.6
+   */
+  public double getZoomForDistance (double dist) {
+
+    double level;
+  
+    if (dist <= minCameraDistance()) level = MAX_ZOOM_LEVEL;
+    else if (dist >= maxCameraDistance()) level = MIN_ZOOM_LEVEL;
+    else {
+      double z = -WORLD_RADIUS - dist;
+      level = Math.pow ((z - B)/A, 2);
+    } // else
+
+    return (level);
+
+  } // getZoomForDistance
 
   /////////////////////////////////////////////////////////////////
 
@@ -375,6 +407,39 @@ public class WorldView {
   /////////////////////////////////////////////////////////////////
 
   /**
+   * Gets the minimum camera distance from the surface in graphics system model units.
+   *
+   * @return the minimum camera distance.
+   *
+   * @since 0.6
+   */
+  public double minCameraDistance() { return (-WORLD_RADIUS - MAX_CAMERA_Z); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the maximum camera distance from the surface in graphics system model units.
+   *
+   * @return the maximum camera distance.
+   *
+   * @since 0.6
+   */
+  public double maxCameraDistance() { return (-WORLD_RADIUS - MIN_CAMERA_Z); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the camera distance from the surface in graphics system model units.
+   *
+   * @return the camera distance.
+   *
+   * @since 0.6
+   */
+  public double cameraDistance() { return (-WORLD_RADIUS - cameraZProp.getValue()); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
    * Gets the maximum camera zoom level.
    *
    * @return the maximum camera zoom level.
@@ -400,8 +465,26 @@ public class WorldView {
   public ViewProperties getProperties() {
 
     ViewProperties props = new ViewProperties();
-    props.vres = (int) scene.getHeight();
+
+    // Detect the screen that data is going to be displayed on.
+    var screen = Screen.getPrimary();
+    var bounds = screen.getBounds();
+    int width = (int) bounds.getWidth();
+    int height = (int) bounds.getHeight();
+    String dpiProp = System.getProperty ("dpi");
+    int dpi = (dpiProp != null ? Integer.parseInt (dpiProp) : (int) screen.getDpi());
+    LOGGER.fine ("Detected display of dimensions " + width + "x" + height + " at " + dpi + " DPI");
+
+    // We compute an approximate vertical resolution here, assuming the
+    // view takes up half the screen.
+    props.vres = (int) Math.round ((height/2.0)*(dpi/81.0));
+
+    // Make it so that the accuracy of the model is such that it's at most
+    // 4 pixels from the exact value.
     props.tau = 4;
+//    props.tau = 2;
+    
+    // Set the other parameters accordingly.
     double fov = camera.getFieldOfView();
     props.tan_phi_o_2 = Math.tan (Math.toRadians (fov/2));
     props.cmin = -WORLD_RADIUS - MAX_CAMERA_Z;

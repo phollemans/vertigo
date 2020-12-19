@@ -154,4 +154,27 @@ public class SphereFunctions {
 
   /////////////////////////////////////////////////////////////////
 
+  /**
+   * Formats an angle to DDDºMM'SS.SS" notation.
+   *
+   * @param deg the angle to format in degrees.
+   *
+   * @return the formatted angle.
+   *
+   * @since 0.6
+   */
+  public static String degMinSec (
+    double deg
+  ) {
+
+    deg = Math.abs (deg);
+    int dd = (int) deg;
+    int mm = (int) ((deg - dd)*60);
+    double ss = (deg - dd - mm/60.0)*3600;
+    return (String.format ("%3dº%02d'%05.2f\"", dd, mm, ss));
+
+  } // degMinSec
+  
+  /////////////////////////////////////////////////////////////////
+
 } // SphereFunctions class

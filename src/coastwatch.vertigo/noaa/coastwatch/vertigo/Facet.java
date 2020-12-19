@@ -11,7 +11,6 @@ import java.util.logging.Level;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadFactory;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -20,20 +19,26 @@ import java.util.function.Consumer;
 
 import javafx.geometry.Point3D;
 import javafx.geometry.Bounds;
+
 import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
+
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 
 /**
  * The <code>Facet</code> class holds information about a single facet element
@@ -90,29 +95,28 @@ public class Facet {
   /** The consumer called when a facet has an update to the scene graph. */
   private Consumer<Runnable> updateConsumer;
   
+  /** The updating property that reflects the state of updating. */
+  private BooleanProperty updatingProp;
+  
   /////////////////////////////////////////////////////////////////
 
   static {
   
-    // Create a thread factory tha makes daemon threads based on the
-    // default factory.  This is used so that the program exits correctly (ie:
-    // there are no non-daemon threads lying around).
-    ThreadFactory daemonFactory = new ThreadFactory() {
-      ThreadFactory defaultFactory = Executors.defaultThreadFactory();
-      public Thread newThread​ (Runnable r) {
-        Thread thread = defaultFactory.newThread (r);
-        thread.setDaemon (true);
-        return (thread);
-      } // newThread
-    };
-  
-    // Set up and executor that spans all facets and uses half of the available
+    // Set up an executor that spans all facets and uses half of the available
     // processors.  We want to make sure that we don't starve the application
     // thread.
-    int maxThreads = Math.max (1, Runtime.getRuntime().availableProcessors()-3);
+
+    int maxThreads = 4;
+
+//    int maxThreads = Runtime.getRuntime().availableProcessors()-3;
+//    if (maxThreads < 1) maxThreads = 1;
+//    else if (maxThreads > 4) maxThreads = 4;
+
+//    int maxThreads = Math.max (1, Runtime.getRuntime().availableProcessors()-3);
 //    int maxThreads = 16;
+
     LOGGER.fine ("Using " + maxThreads + " background threads for facet updates");
-    executor = Executors.newFixedThreadPool (maxThreads, daemonFactory);
+    executor = Executors.newFixedThreadPool (maxThreads, DaemonThreadFactory.getInstance());
 
   } // static
 
@@ -173,7 +177,42 @@ public class Facet {
       completeUpdate (responseFactory.getValue());
     });
 
+    // Create the updating property that monitors the response factory for
+    // changes in state and is set to true when the response factory is
+    // either scheduled or running.
+    updatingProp = new SimpleBooleanProperty();
+    var factoryState = responseFactory.stateProperty();
+    updatingProp.bind (
+      factoryState.isEqualTo (Worker.State.RUNNING).or (factoryState.isEqualTo (Worker.State.SCHEDULED))
+    );
+
   } // Facet
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the updating property which is true when this facet is updating or
+   * false otherwise.
+   *
+   * @return the updating property.
+   *
+   * @since 0.6
+   */
+  public ReadOnlyBooleanProperty updatingProperty () { return (updatingProp); }
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the updating flag value.
+   *
+   * @return the updating flag, true if this facet is updating or false if
+   * not.
+   *
+   * @since 0.6
+   *
+   * @see #updatingProperty
+   */
+  public boolean isUpdating () { return (updatingProp.getValue()); }
 
   /////////////////////////////////////////////////////////////////
 
@@ -237,6 +276,21 @@ public class Facet {
   /////////////////////////////////////////////////////////////////
 
   /**
+   * Computes an estimate of the memory used by this facet.
+   *
+   * @return the memory in bytes.
+   *
+   * @since 0.6
+   */
+  public long totalMemory () {
+
+    return (responseFactory.cacheMemory());
+
+  } // totalMemory
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
    * The <code>FacetUpdateResponseFactory</code> runs a service that takes
    * a request and fetches the data in a background thread to create
    * a response value.
@@ -251,6 +305,16 @@ public class Facet {
 
     /** The cache of texture level to mesh for this facet. */
     private Map<Integer, TriangleMesh> meshCache = new HashMap<>();
+
+    /** Computes the texture cache memory used by this factory. */
+    public long cacheMemory () {
+      long memory = 0;
+      for (var image : textureCache.values()) {
+        long pixels = ((long) image.getWidth()) * ((long) image.getHeight());
+        memory += pixels*4;
+      } // for
+      return (memory);
+    } // cacheMemory
 
     @Override
     protected Task<FacetUpdateResponse> createTask() {

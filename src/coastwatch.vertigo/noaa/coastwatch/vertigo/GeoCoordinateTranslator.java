@@ -30,5 +30,24 @@ public interface GeoCoordinateTranslator {
     double[] model
   );
 
+  /**
+   * Translates a 3D model coordinate in (x,y,z) to a geographic coordinate
+   * in (lat,lon).  We assume that the model coordinate lies on the surface.
+   *
+   * @param x the model x coordinate.
+   * @param y the model y coordinate.
+   * @param z the model z coordinate.
+   * @param latLon the geographic (lat,lon) coordinates in degrees in the
+   * range [-90..90] and [-180..180] respectively (modified).
+   *
+   * @since 0.6
+   */
+  void translate (
+    double x,
+    double y,
+    double z,
+    double[] latLon
+  );
+
 } // GeoCoordinateTranslator interface
 

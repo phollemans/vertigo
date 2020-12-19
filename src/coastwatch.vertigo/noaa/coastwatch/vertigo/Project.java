@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -40,7 +41,32 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /**
- * The <code>Project</code> class reads and writes project XML files.
+ * The <code>Project</code> class reads and writes project XML files.  A
+ * project file is read with the help of a list of <code>ProjectObjectBuilder</code>
+ * objects.  Each object has a type name that corresponds to a top-level
+ * tag name in the XML file and accepts a series of property names and
+ * values in order to build its object type.  The XML file for specifying a
+ * series of project objects has an overall structure as follows:
+ * <pre>
+ *   vertigo {
+ *     object-type {
+ *       property name=... type=... value=...
+ *       property name=... type=... value=...
+ *       ...
+ *       config {
+ *         property name=... type=... value=...
+ *         property name=... type=... value=...
+ *       }
+ *     }
+ *     object-type {
+ *      ...
+ *     }
+ *   }
+ * </pre>
+ * where the types supported are string, boolean, int, double, date, and color.
+ * Colors are as specified by the javafx.scene.paint.Color.web() method.  Dates
+ * are specified either as an integer number of minutes before the current
+ * system time, or in the format yyyy/MM/dd HH:mm in UTC.
  *
  * @author Peter Hollemans
  * @since 0.5
@@ -53,7 +79,7 @@ public class Project {
   private static SimpleDateFormat dateFormat;
 
   /** The list of objects in this project. */
-  private List<Object> objectList;
+  private List<ProjectObject> objectList;
 
   /////////////////////////////////////////////////////////////////
 
@@ -104,7 +130,7 @@ public class Project {
 
         // For each builder, we get the type name and search for elements
         // off the document root with the type name of the builder.
-        XPathExpression builderExpr = xpath.compile ("/vertigo/" + builder.getTypeName());
+        XPathExpression builderExpr = xpath.compile ("/VertigoProject/" + builder.getTypeName());
         NodeList builderNodes = (NodeList) builderExpr.evaluate (doc, XPathConstants.NODESET);
         for (int i = 0; i < builderNodes.getLength(); i++) {
 
@@ -177,15 +203,18 @@ public class Project {
     else if (type.equals ("int")) obj = Integer.valueOf (value);
     else if (type.equals ("double")) obj = Double.valueOf (value);
     else if (type.equals ("date")) {
-      int delta = Integer.MAX_VALUE;
-      try { delta = Integer.parseInt (value); }
-      catch (NumberFormatException e) { }
-      if (delta != Integer.MAX_VALUE)
-        obj = new Date (System.currentTimeMillis() + delta*60000);
-      else {
-        try { obj = dateFormat.parse (value); }
-        catch (ParseException e) { throw new NumberFormatException ("Error parsing date value '" + value + "'"); }
-      } // else
+      try {
+        int delta = Integer.parseInt (value);
+        obj = new Date (System.currentTimeMillis() + delta*60000L);
+      } // try
+      catch (NumberFormatException e) {
+        try {
+          obj = dateFormat.parse (value);
+        } // try
+        catch (ParseException pe) {
+          throw new NumberFormatException ("Error parsing date value '" + value + "'");
+        } // catch
+      } // catch
     } // else
     else if (type.equals ("color")) obj = Color.web (value);
     else throw new IllegalArgumentException ("Project contains unknown object type '" + type + "'");
@@ -205,7 +234,7 @@ public class Project {
    * @return the list of objects, possibly zero length if the project
    * contains no objects of the specified class.
    */
-  public <T> List<T> getObjects (
+  public <T extends ProjectObject> List<T> getObjects (
     Class<T> objectClass
   ) {
 
@@ -218,6 +247,73 @@ public class Project {
     return (list);
 
   } // getObjects
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets an object of a specified type and name from the collection of
+   * objects contained in this project.
+   *
+   * @param objectClass the class of project object to retrieve.
+   * @param name the name of the object.
+   *
+   * @return the object or null if one cannot be found.
+   *
+   * @since 0.6
+   */
+  public <T extends ProjectObject> T getObject (
+    Class<T> objectClass,
+    String name
+  ) {
+
+    T obj = getObjects (objectClass).stream()
+      .filter (f -> f.getName().equals (name))
+      .findFirst().orElse (null);
+    return (obj);
+
+  } // getObject
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a list of object names of a specified type from the collection of
+   * objects contained in this project.
+   *
+   * @param objectClass the class of project object names to retrieve.
+   *
+   * @return the list of object names, possibly zero length if the project
+   * contains no objects of the specified class.
+   *
+   * @since 0.6
+   */
+  public <T extends ProjectObject> List<String> getObjectNames (
+    Class<T> objectClass
+  ) {
+  
+    return (
+      getObjects (objectClass).stream()
+      .map (obj -> obj.getName())
+      .collect (Collectors.toList())
+    );
+
+  } // getObjectNames
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Adds the specified object to the project.
+   *
+   * @param object the object to add.
+   *
+   * @since 0.6
+   */
+  public void addObject (
+    ProjectObject object
+  ) {
+
+    objectList.add (object);
+
+  } // addObject
 
   /////////////////////////////////////////////////////////////////
 

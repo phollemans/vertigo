@@ -42,7 +42,7 @@ public interface ProjectObjectBuilder {
    * @throws RuntimeException if the set of properties most recently passed
    * to the builder cannot be used to create an object.
    */
-  Object getObject();
+  ProjectObject getObject();
 
 } // ProjectObjectBuilder interface
 

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Date;
 import java.io.IOException;
 
+import javafx.scene.layout.Region;
+
 /**
  * The <code>GeoSurfaceFactory</code> interface is for classes that create
  * instances of geographic data-based dynamic surfaces, selected from various
@@ -26,6 +28,15 @@ public interface GeoSurfaceFactory extends ProjectViewObject {
    * @return true if the factory is initialized, or false if not.
    */
   boolean isInitialized();
+
+  /**
+   * Adds a task to the list to be performed before any other initialization.
+   *
+   * @param task the task to add to the list.
+   *
+   * @since 0.6
+   */
+  void addInitTask (Runnable task);
 
   /**
    * Initializes the factory before performing any other queries.
@@ -85,63 +96,41 @@ public interface GeoSurfaceFactory extends ProjectViewObject {
   ) throws IOException;
 
   /**
-   * Gets the time index for this surface factory that is closest to a given
-   * date.
+   * Gets the legend for the surfaces created by this factory.
    *
-   * @param date the date to search for.
+   * @return the legend to combine with surface display, or null if there
+   * is no legend.
    *
-   * @return the time index whose date is closest to that requested.
-   *
-   * @throws IllegalStateException if this method is called when there are
-   * no time steps.
+   * @since 0.6
    */
-  default int closestTimeIndex (Date date) {
-  
-    long minDiff = Long.MAX_VALUE;
-    int index = -1;
-    long time = date.getTime();
-    List<Date> times = getTimes();
-    for (int i = 0; i < times.size(); i++) {
-      long surfaceTime = times.get (i).getTime();
-      long diff = Math.abs (time - surfaceTime);
-      if (diff < minDiff) { diff = minDiff; index = i; }
-      if (diff == 0) break;
-    } // for
-  
-    if (index == -1) throw new IllegalStateException ("Surface factory has no time steps");
-    return (index);
-
-  } // closestTimeIndex
+  default Region getLegend() { return (null); }
 
   /**
-   * Gets the level index for this surface factory that is closest to a given
-   * level.
+   * Gets the vertical level units available in this factory.
    *
-   * @param level the level value to search for.
+   * @return the vertical level measurement units, or null for none.
    *
-   * @return the level index whose value is closest to that requested.
-   *
-   * @throws IllegalStateException if this method is called when there are
-   * no levels.
+   * @since 0.6
    */
-  default int closestLevelIndex (double level) {
-  
-    double minDiff = Double.MAX_VALUE;
-    int index = -1;
-    List<Double> levels = getLevels();
-    for (int i = 0; i < levels.size(); i++) {
-      double surfaceLevel = levels.get (i);
-      double diff = Math.abs (level - surfaceLevel);
-      if (diff < minDiff) { diff = minDiff; index = i; }
-      if (diff == 0) break;
-    } // for
-  
-    if (index == -1) throw new IllegalStateException ("Surface factory has no levels");
-    return (index);
-  
-  } // closestLevelIndex
+  default String getLevelUnits() { return (null); }
 
-  /////////////////////////////////////////////////////////////////
+  /**
+   * Gets the data credit for this factory.
+   *
+   * @return the data credit or null for none.
+   *
+   * @since 0.6
+   */
+  default String getCredit() { return (null); }
+
+  /**
+   * Gets the source URL for this factory.
+   *
+   * @return the source URL or null for none.
+   *
+   * @since 0.6
+   */
+  default String getSourceUrl() { return (null); }
 
 } // GeoSurfaceFactory class
 

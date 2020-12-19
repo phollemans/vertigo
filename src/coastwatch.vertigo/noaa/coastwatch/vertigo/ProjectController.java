@@ -7,6 +7,8 @@
 package noaa.coastwatch.vertigo;
 
 import javafx.application.Platform;
+import javafx.scene.layout.Region;
+import javafx.beans.value.ChangeListener;
 
 import java.net.URL;
 import java.io.IOException;
@@ -14,10 +16,18 @@ import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -33,8 +43,14 @@ public class ProjectController {
 
   private static final Logger LOGGER = Logger.getLogger (ProjectController.class.getName());
 
+  /** The maximum number of surfaces allowed in the cache. */
+  private static final int MAX_SURFACES = 8;
+
   /** The project to access for objects. */
   private Project proj;
+
+  /** The controller for the world view and model. */
+  private WorldController worldController;
 
   /** The cache of surfaces requested. */
   private Map<String, DynamicSurface> surfaceCache;
@@ -45,17 +61,85 @@ public class ProjectController {
   /** The surface that is currently active in the view. */
   private DynamicSurface activeSurface;
 
-  /** The active surface name. */
-  private String activeSurfaceName;
+  /** The active surface hash key. */
+  private String activeSurfaceKey;
+
+  /** The surface handler for the project. */
+  private GeoSurfaceHandler surfaceHandler;
+
+  /** The listener for progress on the active surface. */
+  private ChangeListener<Number> progressListener;
+
+  /** The progress of rendering the active surface in the range [0..1]. */
+  private DoubleProperty progressProp;
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the progress property indicating the progress of the active surface
+   * updating in the range [0..1] where 0 is not updated at all and 1 is
+   * completely updated.
+   *
+   * @return the progress property.
+   *
+   * @since 0.6
+   */
+  public ReadOnlyDoubleProperty progressProperty () { return (progressProp); }
 
   /////////////////////////////////////////////////////////////////
 
   protected ProjectController () {
-  
-    surfaceCache = new HashMap<>();
+
+    // We create a surface cache here that can only hold up to some maximum
+    // number of entries.  The memory used by each surface will otherwise
+    // accumulate and result in an out of memory error.  It would be better
+    // if we could monitor the actual memory used by a surface, but we
+    // currently have no way to do that and texture images seem to only account
+    // for a fraction of the total.
+    surfaceCache = new LinkedHashMap<> (16, 0.75f, true) {
+      @Override
+      protected boolean removeEldestEntry (Map.Entry<String, DynamicSurface> eldest) {
+        return (size() > MAX_SURFACES);
+      } // removeEldestEntry
+    };
+
     surfaceThreadCache = new HashMap<>();
-  
+
+
+//    if (LOGGER.isLoggable (Level.FINE)) {
+//      var timer = new Timer (true);
+//      timer.scheduleAtFixedRate (new TimerTask () {
+//          public void run() {
+//            if (activeSurface != null) {
+//              LOGGER.fine ("Active surface using " + activeSurface.totalMemory()/1024/1024 + " Mb texture memory");
+//            } // if
+//          } // run
+//        }, 10000, 10000
+//      );
+//    } // if
+
+
+    // The progress property holds the progress state of whatever surface
+    // is currently active.  We need to attach/unattach it as needed.
+    progressProp = new SimpleDoubleProperty();
+    progressProp.setValue (1);
+
+
+
+
+
   } // ProjectController
+
+  /////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the project stored by this controller.
+   *
+   * @return the project object.
+   *
+   * @since 0.6
+   */
+  public Project getProject () { return (proj); }
 
   /////////////////////////////////////////////////////////////////
 
@@ -63,59 +147,32 @@ public class ProjectController {
    * Gets an instance of a project controller for the specified project.
    *
    * @param projectFile the project file to read.
+   * @param worldController the world controller to use for project objects.
+   * @param surfaceHandler the surface handler to use for showing/hiding surfaces.
+   * @param builderList the list of builders for project objects.
    *
    * @return the controller for the project.
    *
    * @throws IOException if an error occurred reading the project file.
    */
   public static ProjectController getInstance (
-    URL projectFile
+    URL projectFile,
+    WorldController worldController,
+    GeoSurfaceHandler surfaceHandler,
+    List<ProjectObjectBuilder> builderList
   ) throws IOException {
 
     // Create the project using a set of builders -- note we specify the
     // palette first so that any palettes are available to the surfaces that
     // come next.
-    List<ProjectObjectBuilder> builderList = List.of (
-      new PaletteBuilder(),
-      new AreaBuilder(),
-      new GeoSurfaceFactoryBuilder (GeoSurfaceHandler.getInstance().getContext())
-    );
     var controller = new ProjectController();
     controller.proj = Project.readFromXML (projectFile, builderList);
+    controller.worldController = worldController;
+    controller.surfaceHandler = surfaceHandler;
   
     return (controller);
     
   } // getInstance
-
-  /////////////////////////////////////////////////////////////////
-
-  /**
-   * Gets the list of surface name in the project.
-   *
-   * @return the list of surface names.
-   */
-  public List<String> getSurfaces () {
-  
-    return (
-      proj.getObjects (GeoSurfaceFactory.class).stream()
-      .filter (factory -> factory.getConfigBoolean ("selectable"))
-      .map (factory -> factory.getName())
-      .collect (Collectors.toList())
-    );
-  
-  } // getSurfaces
-
-  /////////////////////////////////////////////////////////////////
-
-  private GeoSurfaceFactory factoryForName (String name) {
-  
-    GeoSurfaceFactory factory = proj.getObjects (GeoSurfaceFactory.class).stream()
-      .filter (f -> f.getName().equals (name))
-      .findFirst().get();
-
-    return (factory);
-  
-  } // factoryForName
 
   /////////////////////////////////////////////////////////////////
 
@@ -136,12 +193,13 @@ public class ProjectController {
 
     // Create and start the task that initializes the factory and
     // possibly throws an exception.
-    var factory = factoryForName (name);
+    var factory = proj.getObject (GeoSurfaceFactory.class, name);
     FutureTask<Void> initTask = new FutureTask<Void> (() -> {
       factory.initialize();
       return (null);
     });
     var initThread = new Thread (initTask);
+    initThread.setDaemon (true);
     initThread.start();
     
     // Create and start the wait task that waits for the initialization to
@@ -154,9 +212,28 @@ public class ProjectController {
       Exception fExcept = except;
       Platform.runLater (() -> exceptionConsumer.accept (fExcept));
     });
+    waitThread.setDaemon (true);
     waitThread.start();
 
   } // initSurface
+
+  /////////////////////////////////////////////////////////////////
+  
+  /**
+   * Clears the active surface.
+   *
+   * @since 0.6
+   */
+  public void clearSurface() {
+  
+    if (activeSurface != null) {
+      surfaceHandler.deactivateSurface (activeSurface);
+      progressProp.unbind();
+      progressProp.setValue (1);
+    } // if
+    activeSurface = null;
+
+  } // clearSurface
 
   /////////////////////////////////////////////////////////////////
 
@@ -169,87 +246,96 @@ public class ProjectController {
     DynamicSurface surface
   ) {
   
-    var handler = GeoSurfaceHandler.getInstance();
-    if (activeSurface != null) handler.deactivateSurface (activeSurface);
-    handler.activateSurface (surface);
+    if (activeSurface != null) {
+      surfaceHandler.deactivateSurface (activeSurface);
+      progressProp.unbind();
+    } // if
+    progressProp.bind (surface.progressProperty());
+    surfaceHandler.activateSurface (surface);
     activeSurface = surface;
-  
+
   } // setActiveSurface
 
   /////////////////////////////////////////////////////////////////
 
   /**
-   * Shows the surface with the specified name.
+   * Shows the surface with the specified name, date/time, and level.
    *
    * @param name the surface name to search for.
+   * @param timeIndex the time index for the surface, or -1 if the surface has
+   * no times.
+   * @param levelIndex the level index for the surface, or -1 if the surface
+   * has no levels.
+   *
+   * @since 0.6
    */
   public void showSurface (
-    String name
+    String name,
+    int timeIndex,
+    int levelIndex
   ) {
 
-    // Set the active surface name.  We use this value in a check when
+    // Check the factory for the surface.
+    var factory = proj.getObject (GeoSurfaceFactory.class, name);
+    if (!factory.isInitialized())
+      throw new IllegalStateException ("Surface factory for '" + name + "' is not initialized");
+
+    // Create a hash key for the surface request
+    String surfaceKey = name + (timeIndex != -1 ? "__T" + timeIndex : "") + (levelIndex != -1 ? "__L" + levelIndex : "");
+
+    // Set the active surface key.  We use this value in a check when
     // creating and activating a surface to make sure that the surface being
     // activated should be the surface that was just created.
-    activeSurfaceName = name;
+    activeSurfaceKey = surfaceKey;
 
     // If we have the surface cached, just show it immediately.
-    var surface = surfaceCache.get (name);
+    var surface = surfaceCache.get (surfaceKey);
     if (surface != null) {
       setActiveSurface (surface);
     } // if
 
     // If it's not cached and there isn't already a thread creating the surface,
     // start a thread to create it and then show it when it's ready.
-    else if (!surfaceThreadCache.containsKey (name)) {
-
-      // Check the factory for the surface.
-      var factory = factoryForName (name);
-      if (!factory.isInitialized())
-        throw new IllegalStateException ("Surface factory for " + name + " is not initialized");
+    else if (!surfaceThreadCache.containsKey (surfaceKey)) {
 
       // Create and activate the surface in a background thread.  The process
       // of creating the surface can take a little time, depending on the
       // data source.  If the active surface has been changed before we can
       // create the surface, we don't go through the process of activating it.
       var surfaceThread = new Thread (() -> {
-        int time = factory.hasTimes() ? factory.closestTimeIndex (factory.getConfigDate ("time")) : 0;
-        int level = factory.hasLevels() ? factory.closestLevelIndex (factory.getConfigDouble ("level")) : 0;
         try {
-          var newSurface = factory.createSurface (time, level);
+          var newSurface = factory.createSurface (timeIndex, levelIndex);
           Platform.runLater (() -> {
-            surfaceCache.put (name, newSurface);
-            surfaceThreadCache.remove (name);
-            if (activeSurfaceName.equals (name)) setActiveSurface (newSurface);
-            else LOGGER.warning ("Aborting display of surface " + name);
+
+
+            surfaceCache.put (surfaceKey, newSurface);
+
+
+//LOGGER.fine ("Surface cache now contains " + surfaceCache.size() + " surfaces");
+//long memory = 0;
+//for (var obj : surfaceCache.values()) memory += obj.totalMemory();
+//LOGGER.fine ("Using estimated " + memory/1024/1024 + " Mb in surface texture images");
+
+
+
+
+            surfaceThreadCache.remove (surfaceKey);
+            if (activeSurfaceKey.equals (surfaceKey)) setActiveSurface (newSurface);
+            else LOGGER.warning ("Aborting display of surface '" + name + "' at time index " + timeIndex + ", level index " + levelIndex);
           });
         } // try
         catch (IOException e) {
-          LOGGER.log (Level.WARNING, "Surface creation failed for " + name + " at time index " + time + ", level index " + level, e);
+          LOGGER.log (Level.WARNING, "Surface creation failed for '" + name + "' at time index " + timeIndex + ", level index " + levelIndex, e);
         } // catch
       });
-      surfaceThreadCache.put (name, surfaceThread);
+      surfaceThreadCache.put (surfaceKey, surfaceThread);
+      LOGGER.fine ("Starting thread for creation of surface '" + name + "' at time index " + timeIndex + ", level index " + levelIndex);
+      surfaceThread.setDaemon (true);
       surfaceThread.start();
 
     } // else if
 
   } // showSurface
-
-  /////////////////////////////////////////////////////////////////
-
-  /**
-   * Gets the list of area names in the project.
-   *
-   * @return the list of area names.
-   */
-  public List<String> getAreas () {
-  
-    return (
-      proj.getObjects (Area.class).stream()
-      .map (area -> area.name)
-      .collect (Collectors.toList())
-    );
-  
-  } // getAreas
 
   /////////////////////////////////////////////////////////////////
 
@@ -262,14 +348,11 @@ public class ProjectController {
     String name
   ) {
 
-    var area = proj.getObjects (Area.class).stream()
-      .filter (a -> a.name.equals (name))
-      .findFirst().get();
-    
+    var area = proj.getObject (Area.class, name);
     double xAngle = area.latitude;
     double yAngle = area.longitude+180;
     if (yAngle > 180) yAngle -= 360;
-    WorldController.getInstance().zoomTo (xAngle, yAngle, area.extent);
+    worldController.zoomTo (xAngle, yAngle, area.extent);
       
   } // getArea
 
