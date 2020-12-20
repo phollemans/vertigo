@@ -27,7 +27,7 @@ Pre-compiled installable packages are available for Windows, Mac, and Linux:
 
 # Tutorials
 
-The YouTube [CoastWatch Vertigo Project](https://www.youtube.com/watch?v=Iq-7X_PFBO8&list=PL_-bsOLKMYJxlOTJn6E_EUvjBJtSwzYir) playlist contains videos 
+The YouTube [CoastWatch Vertigo Project](https://www.youtube.com/watch?v=2s9bBA925jM&list=PL_-bsOLKMYJxlOTJn6E_EUvjBJtSwzYir&index=1) playlist contains videos 
 on installing and using Vertigo to view data.
 
 # Development
