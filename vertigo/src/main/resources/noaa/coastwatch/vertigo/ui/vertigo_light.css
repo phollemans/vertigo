@@ -1,0 +1,123 @@
+.root {
+  -fx-font-size: 10pt;
+}
+
+.label.status-bar {
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0.0, 0, 1);
+  -fx-text-fill: white;
+  -fx-font-size: 9pt;
+}
+
+.box-status-bar {
+  -fx-background-color: rgb(32,32,32,0.5);
+  -fx-spacing: 5;
+  -fx-padding: 4 10 4 10;
+  -fx-alignment: center-left;
+}
+
+.label.logo-small {
+  -fx-font: normal 10pt sans-serif;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1.0), 3, 0.0, 0, 0);
+  -fx-text-fill: white;
+}
+
+.label.logo {
+  -fx-font: normal 18pt sans-serif;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1.0), 3, 0.0, 0, 0);
+  -fx-text-fill: white;
+}
+
+.logo {
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.7), 5, 0.0, 0, 0);
+}
+
+.button.help {
+  -fx-background-color: transparent;
+  -fx-graphic: url('question.png');
+  -fx-padding: 0 0 5 10;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0.0, 0, 0);
+}
+
+.button.help:hover {
+  -fx-effect: innershadow(three-pass-box, rgba(255,255,255,0.3), 32, 0.0, 0, 0);
+}
+
+.button.help:pressed {
+  -fx-effect: innershadow(three-pass-box, rgba(255,255,255,0.5), 32, 0.0, 0, 0);
+}
+
+.icon-shadow {
+/*  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1.0), 3, 0.0, 0, 0);*/
+}
+
+.legend {
+  -fx-spacing: 0;
+  -fx-padding: 10 15 5 15;
+  -fx-background-color: rgb(32,32,32,0.5);
+  -fx-background-radius: 10;
+/*   -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 8, 0.0, 2, 2); */
+}
+
+.label.legend-label {
+  -fx-text-fill: white;
+}
+
+.axis.legend-axis {
+  -fx-tick-label-fill: white;
+}
+
+.axis-tick-mark,
+.axis-minor-tick-mark {
+  -fx-fill: null;
+  -fx-stroke: rgb(160,160,160);
+}
+
+.alert.error.dialog-pane {
+  -fx-graphic: url("error.png");
+}
+
+.button.nav-control {
+  -fx-background-color: transparent;
+  -fx-padding: 0;
+}
+
+.progress-indicator {
+  -fx-progress-color: white;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1.0), 2, 0.0, 0, 0);
+}
+
+.image-view.view-control-button {
+  -fx-image: url('flatscreen_tv_dark.png');
+}
+
+.image-view.previous-timestep-button {
+  -fx-image: url('navigate_left_dark.png');
+}
+
+.image-view.next-timestep-button {
+  -fx-image: url('navigate_right_dark.png');
+}
+
+.image-view.earth-small {
+  -fx-image: url('earth_small_dark.png');
+}
+
+.image-view.earth-large {
+  -fx-image: url('earth_large_dark.png');
+}
+
+.image-view.available-status {
+}
+
+.image-view.available-info-status {
+  -fx-image: url('information.png');
+}
+
+.image-view.disconnect-status {
+  -fx-image: url('disconnect_dark.png');
+  -fx-opacity: 0.6;
+}
+
+.image-view.warning-status {
+  -fx-image: url('sign_warning.png');
+}

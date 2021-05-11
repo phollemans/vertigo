@@ -1,0 +1,316 @@
+// Quick command reference:
+
+// gradle wrapper --gradle-version 6.8.3    -- Creates wrapper script
+// ./gradlew clean                          -- Cleans up the build directory
+// ./gradlew run                            -- Runs Vertigo on this platform
+// ./gradlew incBuild                       -- Increments minor build number
+// ./gradlew -Pplatform=win -Psign media    -- Creates signed Windows installer
+// ./gradlew -Pplatform=mac -Psign media    -- Creates signed MacOS disk image
+// ./gradlew -Pplatform=linux media         -- Creates Linux targz and deb archive
+
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+plugins {
+  id 'application'
+//  id 'org.openjfx.javafxplugin' version '0.0.9'
+  id 'de.jjohannes.extra-java-module-info' version '0.6'
+  id 'com.install4j.gradle' version '8.0.11'
+}
+
+/////////////////////////////////////////////////////////////////
+
+// EXTERNAL PROPERTIES AND FUNCTIONS
+
+ext {
+
+  // Set major version number
+  vertigoVersion = '0.7'
+
+  // Set other version numbers
+  netcdfJavaVersion = '5.4.1'
+  slf4jVersion = '1.7.9'
+  javafxVersion = '14.0.2.1'
+
+  // Set other parameters
+  displayDpi = '80'
+
+  // Gets the current platform running the build, either 'win', 'linux',
+  // or 'mac'.
+  getPlatform = { ->
+
+    def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
+    def platform
+    if (currentOS.isWindows()) platform = 'win'
+    else if (currentOS.isLinux()) platform = 'linux'
+    else if (currentOS.isMacOsX()) platform = 'mac'
+
+    return (platform)
+
+  } // getPlatform
+
+  buildNumberPropsFile = file ('build.number')
+
+  // Gets a build number from the persistent store, or -1 if
+  // no number is available.
+  getBuildNumber = { ->
+
+    def number
+    if (!buildNumberPropsFile.exists()) {
+      number = -1
+    } // if
+    else {
+      def props = new Properties()
+      props.load (new FileInputStream (buildNumberPropsFile))
+      number = props['build.number'].toInteger()
+    } // else
+
+    return (number);
+  
+  } // getBuildNumber
+
+  // Sets a build number to the persistent store.
+  setBuildNumber = { number ->
+
+    buildNumberPropsFile.delete()
+    buildNumberPropsFile.append ("build.number=${number}\n")
+    
+  } // setBuildNumber
+
+  // Creates a build date string.
+  getBuildDateString = { ->
+
+    def date = new Date()
+    def locale = new Locale ('en', 'Canada')
+    def format = new SimpleDateFormat ('EEEEE, MMMMM dd, yyyy h:mm:ss a zzz', locale)
+    def buildDate = format.format (date)
+
+    return (buildDate)
+
+  } // getBuildDateString
+
+} // ext
+
+/////////////////////////////////////////////////////////////////
+
+// Increments the persisent build number.
+tasks.register ('incBuild') {
+  doLast {
+
+    // Update the build number
+    def date = getBuildDateString()
+    def number = getBuildNumber()
+    number += 1
+    setBuildNumber (number)
+
+    // Write the Vertigo properties file
+    def vertigoPropsFile = file ('src/main/resources/noaa/coastwatch/vertigo/vertigo.properties')
+    vertigoPropsFile.delete()
+    vertigoPropsFile.append ("vertigo.version=${vertigoVersion}\n")
+    vertigoPropsFile.append ("vertigo.build.date=${date}\n")
+    vertigoPropsFile.append ("vertigo.build.number=${number}\n")
+
+    println ("Build incremented to version ${vertigoVersion}.${number}")
+
+ }
+} // incBuild
+
+/////////////////////////////////////////////////////////////////
+
+// MAIN APPLICATION
+
+application {
+  applicationName = 'vertigo'
+  mainModule = 'coastwatch.vertigo'
+  mainClass = 'noaa.coastwatch.vertigo.Vertigo'
+  applicationDefaultJvmArgs = [
+    "-Ddpi=${displayDpi}",
+    '-Dvertigo.devel.mode=true',
+    '-Dprism.lcdtext=false',
+    '-Djava.util.logging.config.class=noaa.coastwatch.vertigo.LoggingConfig'
+  ]
+}
+
+run {
+  args = ['--demoProject=true']
+}
+
+java {
+  modularity.inferModulePath = true
+}
+
+compileJava {
+  options.release = 14
+}
+
+def build = getBuildNumber()
+version = "${vertigoVersion}.${build}"
+if (!project.hasProperty ('platform')) {
+  ext.platform = getPlatform();
+} // if
+
+println ("Current build is ${version} for ${platform}")
+
+/////////////////////////////////////////////////////////////////
+
+// DEPENDENCIES
+
+extraJavaModuleInfo {
+
+  automaticModule ('cdm-core-5.4.1.jar', 'cdm.core')
+  automaticModule ('grib-5.4.1.jar', 'grib')
+  automaticModule ('netcdf4-5.4.1.jar', 'netcdf4')
+  automaticModule ('opendap-5.4.1.jar', 'opendap')
+  automaticModule ('jj2000-5.4.jar', 'jj2000')
+
+  automaticModule ('udunits-5.4.1.jar', 'udunits')
+  automaticModule ('httpservices-5.4.1.jar', 'httpservices')
+  automaticModule ('jcommander-1.78.jar', 'jcommander')
+  automaticModule ('re2j-1.3.jar', 're2j')
+  automaticModule ('jdom2-2.0.6.jar', 'jdom2')
+  automaticModule ('slf4j-nop-1.7.9.jar', 'slf4j')
+  automaticModule ('jsr305-3.0.2.jar', 'jsr305')
+
+  automaticModule ('failureaccess-1.0.1.jar', 'failureaccess')
+  automaticModule ('listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar', 'listenablefuture')
+  automaticModule ('error_prone_annotations-2.3.2.jar', 'error.prone.annotations')
+  automaticModule ('j2objc-annotations-1.3.jar', 'j2objc.annotations')
+  automaticModule ('animal-sniffer-annotations-1.17.jar', 'animal.sniffer.annotations')
+  automaticModule ('commons-logging-1.2.jar', 'commons.logging')
+
+  automaticModule ('proj4j-1.1.1.jar', 'proj4j')
+
+}
+
+repositories {
+  mavenCentral()
+  maven {
+    url 'https://artifacts.unidata.ucar.edu/repository/unidata-all/'
+  }
+}
+
+dependencies {
+
+  implementation "org.locationtech.proj4j:proj4j:1.1.1"
+
+  implementation "org.jsoup:jsoup:1.13.1"
+  implementation "org.commonmark:commonmark:0.17.1"
+  implementation "org.commonmark:commonmark-ext-gfm-tables:0.17.1"
+
+  implementation "edu.ucar:cdm-core:${netcdfJavaVersion}"
+  implementation "org.slf4j:slf4j-nop:${slf4jVersion}"
+  runtimeOnly "edu.ucar:grib:${netcdfJavaVersion}"
+  runtimeOnly "edu.ucar:netcdf4:${netcdfJavaVersion}"
+  runtimeOnly "edu.ucar:opendap:${netcdfJavaVersion}"
+
+  implementation "org.openjfx:javafx-base:${javafxVersion}:${platform}"
+  implementation "org.openjfx:javafx-controls:${javafxVersion}:${platform}"
+  implementation "org.openjfx:javafx-graphics:${javafxVersion}:${platform}"
+  implementation "org.openjfx:javafx-fxml:${javafxVersion}:${platform}"
+  implementation "org.openjfx:javafx-swing:${javafxVersion}:${platform}"
+  implementation "org.openjfx:javafx-web:${javafxVersion}:${platform}"
+  implementation "org.openjfx:javafx-media:${javafxVersion}:${platform}"
+
+  testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.1"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.1"
+
+}
+
+// javafx {
+//  version = "14.0.2.1"
+//  modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.web']
+//}
+
+/////////////////////////////////////////////////////////////////
+
+// INSTALLATION PACKAGES
+
+if (project.hasProperty ('install4jHome')) {
+
+  def sign = project.hasProperty ('sign')
+
+  install4j {
+    installDir = file (project.install4jHome)
+  }
+
+  println ("Registering media task")
+  
+  tasks.register ('media', com.install4j.gradle.Install4jTask) {
+
+    dependsOn installDist
+
+    projectFile = file ("vertigo.install4j")
+    release = project.version
+    disableSigning = !sign
+
+    def variableMap = [:]
+
+    if (sign && platform.equals ("linux")) {
+      println ("Ignoring request to code sign media on Linux")
+      sign = false
+    } // if
+
+    if (sign) {
+    
+      if (!project.hasProperty ("codeSigning"))
+        throw new RuntimeException ("No codeSigning property found")
+
+      def props = new Properties()
+      props.load (new FileInputStream (file (codeSigning)))
+      def expectedProps = [
+        'mac.keystore.file',
+        'mac.keystore.password',
+        'win.keystore.file',
+        'win.keystore.password',
+        'install4j.appleid.login',
+        'install4j.appleid.password'
+      ]
+      for (key in expectedProps) {
+        if (!props.containsKey (key))
+          throw new RuntimeException ("No ${key} found in code signing properties")
+      } // for
+          
+      variableMap.put ('macKeystoreFile', props['mac.keystore.file'])
+      macKeystorePassword = props['mac.keystore.password']
+
+      variableMap.put ('winKeystoreFile', props['win.keystore.file'])
+      winKeystorePassword = props['win.keystore.password']
+
+      variableMap.put ('appleIdLogin', props['install4j.appleid.login'])
+      appleIdPassword = props['install4j.appleid.password']
+
+    } // if
+
+    if (platform.equals ("win"))
+      mediaTypes = ['windows']
+    else if (platform.equals ("linux"))
+      mediaTypes = ['unixArchive', 'linuxDeb']
+    else if (platform.equals ("mac"))
+      mediaTypes = ['macosArchive']
+    else
+      throw new RuntimeException ("Unknown platform: '${platform}'")
+
+    variableMap.put ('installedLibraryDir', './build/install/vertigo/lib')
+    variableMap.put ('appIconBasePath', './support/icons/earth2')
+    variableMap.put ('installIconBasePath', './support/icons/software')
+    variableMap.put ('macSupportDir', './support/mac')
+    variables = variableMap
+
+    destination = 'build/media'
+
+    doFirst {
+      println ("Building " + (sign ? "signed" : "unsigned") + " media file(s): ${mediaTypes}")
+    }
+
+  }
+
+} // if
+
+/////////////////////////////////////////////////////////////////
+
+// TESTING
+
+test {
+  useJUnitPlatform()
+}
+

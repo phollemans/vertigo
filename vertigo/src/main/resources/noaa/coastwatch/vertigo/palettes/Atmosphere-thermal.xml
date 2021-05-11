@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<palette name="Atmosphere-thermal" length="17">
+
+  <color r="237" g="237" b="237"/>
+  <color r="38" g="33" b="91"/>
+  <color r="57" g="7" b="113"/>
+  <color r="146" g="31" b="195"/>
+  <color r="206" g="125" b="243"/>
+  <color r="190" g="250" b="252"/>
+  <color r="126" g="192" b="230"/>
+  <color r="86" g="106" b="201"/>
+  <color r="47" g="54" b="131"/>
+  <color r="75" g="125" b="38"/>
+  <color r="186" g="207" b="52"/>
+  <color r="237" g="229" b="58"/>
+  <color r="238" g="181" b="51"/>
+  <color r="236" g="122" b="37"/>
+  <color r="235" g="64" b="28"/>
+  <color r="119" g="24" b="8"/>
+  <color r="194" g="155" b="158"/>
+  
+</palette>
+
