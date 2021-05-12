@@ -33,7 +33,7 @@ on installing and using Vertigo to view data.
 # Running
 
 To run Vertigo, either install one of the packages listed above which may require
-administrator access to your machine, or follow the instructions below for installing OpenJDK and setting `JAVA_HOME`, then skip directly to Step (4) to run Vertigo using the provided scripts.  
+administrator access to your machine, or follow the instructions below for installing OpenJDK and setting `JAVA_HOME`, then skip directly to Step (4) to run Vertigo using the provided script.  
 
 # Building
 
@@ -52,8 +52,8 @@ packages.
 1) Download the project ZIP file, or clone the repository using Git.
 
 2) Set `JAVA_HOME` to the base JDK directory, for example:
-- Linux / macOS: `export JAVA_HOME=${HOME}/jdk-14.0.2`
-- Windows: `set JAVA_HOME=C:\Users\%USERNAME%\jdk-14.0.2`
+    - Linux / macOS: `export JAVA_HOME=${HOME}/jdk-14.0.2`
+    - Windows: `set JAVA_HOME=C:\Users\%USERNAME%\jdk-14.0.2`
 
 3) To build a runnable distribution file with all dependencies included, use either the 
 `distTar` or `distZip` Gradle tasks.  By default the distribution is built only for the 
@@ -61,12 +61,12 @@ current platform -- to build for another platform specify
 `-Pplatform=win`, `-Pplatform=mac`, or `-Pplatform=linux`.  After building, the 
 distribution file is available in the `vertigo/build/distributions` directory.  For 
 example:
-  - Linux / macOS: `./gradlew distTar`
-  - Windows: `.\gradlew distZip`
+    - Linux / macOS: `./gradlew distTar`
+    - Windows: `.\gradlew distZip`
 
 4) Alternatively, to compile and run Vertigo directly on the current platform:
-- Linux / macOS: `./gradlew run`
-- Windows: `.\gradlew run`
+    - Linux / macOS: `./gradlew run`
+    - Windows: `.\gradlew run`
 
 # Support
 
