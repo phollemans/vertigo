@@ -30,22 +30,43 @@ Pre-compiled installable packages are available for Windows, Mac, and Linux:
 The YouTube [CoastWatch Vertigo Project](https://www.youtube.com/watch?v=2s9bBA925jM&list=PL_-bsOLKMYJxlOTJn6E_EUvjBJtSwzYir&index=1) playlist contains videos 
 on installing and using Vertigo to view data.
 
-# Development
+# Running
 
-#### Required:
-* OpenJDK 14 (http://openjdk.java.net)
-* OpenJFX 14 (https://openjfx.io)
-* Apache ant 1.10
+To run Vertigo, either install one of the packages listed above which may require
+administrator access to your machine, or follow the instructions below for installing OpenJDK and setting `JAVA_HOME`, then skip directly to Step (4) to run Vertigo using the provided scripts.  
 
-#### Optional:
-* install4j 8 (https://www.ej-technologies.com)
+# Building
 
-#### Build and run:
-* Adjust paths in build.xml for JavaFX install directory (both modules and SDK)
-* Type `ant` to build
-* Type `ant test-project -Dproject='file:myproject.vrtx'` to test with a 
-user-specified project file
-* Type `ant test-demo` to test with a built-in demo project file
+#### Required software:
+
+* OpenJDK 14.0.2 (https://jdk.java.net/archive) -- This can be installed either system-wide
+or in a local home directory.
+
+#### Optional software:
+
+* install4j 8 (https://www.ej-technologies.com) -- This is to create and sign installable 
+packages.
+
+#### Steps:
+
+1) Download the project ZIP file, or clone the repository using Git.
+
+2) Set `JAVA_HOME` to the base JDK directory, for example:
+- Linux / macOS: `export JAVA_HOME=${HOME}/jdk-14.0.2`
+- Windows: `set JAVA_HOME=C:\Users\%USERNAME%\jdk-14.0.2`
+
+3) To build a runnable distribution file with all dependencies included, use either the 
+`distTar` or `distZip` Gradle tasks.  By default the distribution is built only for the 
+current platform -- to build for another platform specify 
+`-Pplatform=win`, `-Pplatform=mac`, or `-Pplatform=linux`.  After building, the 
+distribution file is available in the `vertigo/build/distributions` directory.  For 
+example:
+  - Linux / macOS: `./gradlew distTar`
+  - Windows: `.\gradlew distZip`
+
+4) Alternatively, to compile and run Vertigo directly on the current platform:
+- Linux / macOS: `./gradlew run`
+- Windows: `.\gradlew run`
 
 # Support
 
