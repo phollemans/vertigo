@@ -29,7 +29,7 @@ public class DaemonThreadFactory implements ThreadFactory {
   protected DaemonThreadFactory () {}
 
   @Override
-  public Thread newThread​ (Runnable r) {
+  public Thread newThread (Runnable r) {
     Thread thread = defaultFactory.newThread (r);
     thread.setDaemon (true);
     return (thread);

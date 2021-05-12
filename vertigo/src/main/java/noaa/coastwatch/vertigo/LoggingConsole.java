@@ -97,11 +97,11 @@ public class LoggingConsole extends Dialog {
   public static class Handler extends StreamHandler {
     
     public Handler () {
-      setOutputStream​ (logStream);
+      setOutputStream (logStream);
     } // Handler
 
     @Override
-    public void publish​ (LogRecord record) {
+    public void publish (LogRecord record) {
       super.publish (record);
       flush();
       try { logStream.flush(); }

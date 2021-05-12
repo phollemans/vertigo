@@ -285,7 +285,7 @@ public class DatasetListPaneController {
     } // updateStatus
 
     @Override
-    public void updateItem​ (DatasetTreeNode item, boolean empty) {
+    public void updateItem (DatasetTreeNode item, boolean empty) {
 
       super.updateItem (item, empty);
       if (item == null || empty) {

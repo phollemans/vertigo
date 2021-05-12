@@ -337,7 +337,7 @@ public class WorldView {
    * @param type the type of the events to receive by the handler.
    * @param handler the handler to register.
    */
-  public <T extends Event> void addObjectEventHandler​ (
+  public <T extends Event> void addObjectEventHandler (
     EventType<T> type,
     EventHandler<? super T> handler
   ) {
@@ -354,7 +354,7 @@ public class WorldView {
    * @param type the type of the events to receive by the handler.
    * @param handler the handler to register.
    */
-  public <T extends Event> void addSceneEventHandler​ (
+  public <T extends Event> void addSceneEventHandler (
     EventType<T> type,
     EventHandler<? super T> handler
   ) {
