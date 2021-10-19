@@ -44,7 +44,7 @@ public interface ProjectObject {
   /**
    * Sets the specification values for this object.
    *
-   * @return the object specifications.
+   * @param spec the object specifications.
    *
    * @since 0.6
    */

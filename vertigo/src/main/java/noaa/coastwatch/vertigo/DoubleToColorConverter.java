@@ -61,6 +61,8 @@ public class DoubleToColorConverter implements DataConverter<double[], int[]> {
    * @param max the maximum data value to convert.
    * @param map the colors for mapping.  The color at map[0] is used for missing
    * data, and map[1..colors-1] as the valid values.
+   *
+   * @return the function instance.
    */
   public static DoubleToColorConverter linearInstance (
     double min,
@@ -97,6 +99,8 @@ public class DoubleToColorConverter implements DataConverter<double[], int[]> {
    * @param max the maximum data value to convert.
    * @param map the colors for mapping.  The color at map[0] is used for missing
    * data, and map[1..colors-1] as the valid values.
+   *
+   * @return the function instance.
    */
   public static DoubleToColorConverter logInstance (
     double min,

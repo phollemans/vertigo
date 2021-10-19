@@ -54,7 +54,7 @@ public class FacetDataSource {
   /**
    * Initializes this data source, for use by subclasses.
    *
-   * @param facts the number of facets produced by the factories.
+   * @param facets the number of facets produced by the factories.
    * @param meshFactory the mesh factory for facet mesh data.
    * @param textureFactory the texture factory for facet image data.
    */

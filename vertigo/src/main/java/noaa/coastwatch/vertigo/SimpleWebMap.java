@@ -93,7 +93,7 @@ public class SimpleWebMap implements WebMap {
    * </ul>
    * @param levels the number of resolution levels.
    * @param dateList the list of dates available.  The index into the date
-   * list is used in the {@link #getTileWriter} method to specify which
+   * list is used in the {@link #getDataSource} method to specify which
    * date to use for tile images.
    * @param tileSize the square tile size in pixels for each server tile.
    * @param startLat the starting upper-left latitude of the map.  We assume

@@ -104,6 +104,8 @@ public abstract class BaseProjectObjectBuilder implements ProjectObjectBuilder {
    * Completes the builder operation by clearing the property map and
    * transferring the build specifications to the object.
    *
+   * @param object the object to complete building.
+   *
    * @since 0.6
    */
   protected void complete (

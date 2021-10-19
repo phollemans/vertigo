@@ -87,6 +87,9 @@ public class TiledImageMeshFactory implements MeshFactory {
    * less than the camera distance and dmin[level+1] is greater than the camera
    * distance, as much as possible (until the distance becomes too small and
    * no mesh with a higher level of detail is available).
+   *
+   * @throws IOException if an exception occurred accessing the coordinate
+   * source.
    */
   public TiledImageMeshFactory (
     ImageTiling tiling,

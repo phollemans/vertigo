@@ -25,10 +25,10 @@ Pre-compiled installable packages are available for Windows, Mac, and Linux:
 | [Linux (tar.gz)](http://terrenus.ca/download/vertigo/0.6/vertigo_linux_0_6.tar.gz) | 8c2a79f0555261eef3229678c3b5f418 |
 | [Linux (deb)](http://terrenus.ca/download/vertigo/0.6/vertigo_linux_0_6.deb) | d2dc78f969aa8dfad96339739869ee79 |
 
-# Tutorials
+# Videos 
 
 The YouTube [CoastWatch Vertigo Project](https://www.youtube.com/watch?v=2s9bBA925jM&list=PL_-bsOLKMYJxlOTJn6E_EUvjBJtSwzYir&index=1) playlist contains videos 
-on installing and using Vertigo to view data.
+on installing and using Vertigo to view data, and on Vertigo development.
 
 # Running
 

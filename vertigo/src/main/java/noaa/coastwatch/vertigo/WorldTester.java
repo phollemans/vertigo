@@ -82,7 +82,12 @@ public class WorldTester {
 
   /////////////////////////////////////////////////////////////////
 
-  /** Adds random coloured test patches to the controller. */
+  /**
+   * Adds random coloured test patches to the controller.
+   *
+   * @param controller the controller to add patches.
+   * @param count the number of patches to add.
+   */
   public void addPatches (WorldController controller, int count) {
 
     int faces = 0;
@@ -99,7 +104,11 @@ public class WorldTester {
 
   /////////////////////////////////////////////////////////////////
 
-  /** Adds x,y,z axes to the controller. */
+  /**
+   * Adds x,y,z axes to the controller.
+   *
+   * @param controller the controller to add axes.
+   */
   public void addAxes (WorldController controller) {
   
     double radius = controller.getView().worldRadius();
@@ -132,7 +141,11 @@ public class WorldTester {
 
   /////////////////////////////////////////////////////////////////
 
-  /** Adds a spherical tiling to the controller. */
+  /**
+   * Adds a spherical tiling to the controller.
+   *
+   * @param controller the controller to add the tiling.
+   */
   public void addTiling (WorldController controller) {
 
     List<MeshView> viewList = createTestTiling (controller);
@@ -285,8 +298,17 @@ public class WorldTester {
 
   /////////////////////////////////////////////////////////////////
 
-  /** Adds a dynamic surface to the controller. */
-  public void addDynamicSurface (WorldController controller, String texture) {
+  /**
+   * Adds a dynamic surface to the controller.
+   *
+   * @param controller the controller to add the surface.
+   * @param texture the texture image file to add.  The texture is assumed
+   * to completely cover the world in a geographic projection.
+   */
+  public void addDynamicSurface (
+    WorldController controller,
+    String texture
+  ) {
 
     double centerLat = 0;
     double centerLon = 0;
@@ -444,9 +466,26 @@ public class WorldTester {
 
   /////////////////////////////////////////////////////////////////
 
-  /** Adds a NetCDF surface to the controller. */
-  public void addNetCDFSurface (WorldController controller,
-    String ncFile, String ncVar, double min, double max, String funcType, String palette) {
+  /**
+   * Adds a NetCDF surface to the controller.
+   *
+   * @param controller the controller to add the surface.
+   * @param ncFile the name of the NetCDF file.
+   * @param ncVar the NetCDF variable name.
+   * @param min the variable value to map to the start of the color palette.
+   * @param max the variable value to map to the end of the color palette.
+   * @param funcType the color palette function type: "linear" or "log".
+   * @param palette the colour palette.
+   */
+  public void addNetCDFSurface (
+    WorldController controller,
+    String ncFile,
+    String ncVar,
+    double min,
+    double max,
+    String funcType,
+    String palette
+  ) {
 
     // We create a thread to perform the creation of the surface in the
     // background, because the initial work by the NetCDFDataset and
@@ -593,10 +632,24 @@ public class WorldTester {
 
   /////////////////////////////////////////////////////////////////
 
-  /** Adds a tiled web map surface to the controller. */
-  public void addWebMapSurface (WorldController controller,
-    String urlPattern, int levels, int tileSize,
-    double startLat, double startLon) {
+  /**
+   * Adds a tiled web map surface to the controller.
+   *
+   * @param controller the controller to add the surface.
+   * @param urlPattern the path and pattern for the tiled we map (see {@link SimpleWebMap}).
+   * @param levels the number of web map detail levels.
+   * @param tileSize the web map tile size width and height.
+   * @param startLat the starting upper-left latitude of the map.
+   * @param startLon the starting upper-left longitude of the map.
+   */
+  public void addWebMapSurface (
+    WorldController controller,
+    String urlPattern,
+    int levels,
+    int tileSize,
+    double startLat,
+    double startLon
+  ) {
 
     double radius = controller.getView().worldRadius();
     SphereTranslator sphere = new SphereTranslator (radius);

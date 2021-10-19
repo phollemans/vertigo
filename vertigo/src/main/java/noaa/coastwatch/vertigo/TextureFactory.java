@@ -19,7 +19,7 @@ import javafx.scene.image.Image;
 public interface TextureFactory extends LevelOfDetailFactory {
 
   /**
-   * Creates a mesh object of a given index and level of detail.
+   * Creates a texture image of a given index and level of detail.
    *
    * @param index the index of the object within a group to create.
    * @param aspect the approximate aspect ratio width:height that the

@@ -248,7 +248,6 @@ public class Vertigo extends Application {
     mergeProperties();
 
 
-
     // Starts a timer that shows the VM memory usage
 //    if (LOGGER.isLoggable (Level.FINE)) {
 //      var timer = new Timer (true);

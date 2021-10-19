@@ -28,7 +28,13 @@ public class WebMapCoordinateSource extends GeoFunctionCoordinateSource {
   /**
    * Initializes this coordinate source.
    *
-   * @see #getInstance
+   * @param levels the number of resolution levels.
+   * @param tileSize the square tile size in pixels for each server tile.
+   * @param startLat the starting upper-left latitude of the map.  We assume
+   * that maps are symmetrical about the equator and that the southern most
+   * latitude is -startLat.
+   * @param startLon the starting upper-left longitude of the map.
+   * @param trans the translator from geographic (lat,lon) to model (x,y,z).
    */
   protected void init (
     int levels,
@@ -72,6 +78,8 @@ public class WebMapCoordinateSource extends GeoFunctionCoordinateSource {
    * latitude is -startLat.
    * @param startLon the starting upper-left longitude of the map.
    * @param trans the translator from geographic (lat,lon) to model (x,y,z).
+   *
+   * @return the coordinate source instance.
    */
   public static WebMapCoordinateSource getInstance (
     int levels,

@@ -43,7 +43,8 @@ public class GeoFunctionCoordinateSource implements ImageCoordinateSource {
   /**
    * Initializes this coordinate source.
    *
-   * @see #getInstance
+   * @param func the function that translates image (x,y) to (lat,lon).
+   * @param trans the translator from (lat,lon) to model (x,y,z).
    */
   protected void init (
     BiConsumer<int[], double[]> func,
@@ -66,6 +67,8 @@ public class GeoFunctionCoordinateSource implements ImageCoordinateSource {
    *
    * @param func the function that translates image (x,y) to (lat,lon).
    * @param trans the translator from (lat,lon) to model (x,y,z).
+   *
+   * @return the new coordinate source.
    */
   public static GeoFunctionCoordinateSource getInstance (
     BiConsumer<int[], double[]> func,

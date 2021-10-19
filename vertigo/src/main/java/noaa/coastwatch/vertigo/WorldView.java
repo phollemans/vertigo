@@ -34,7 +34,17 @@ import java.util.logging.Level;
 
 /**
  * The <code>WorldView</code> class is the main view component of the MVC
- * for Vertigo.
+ * for Vertigo.  The view holds references for:
+ * <ul>
+ *   <li> The objects in the view </li>
+ *   <li> The rotation angles of the objects </li>
+ *   <li> The JavaFX SubScene that contains the objects </li>
+ *   <li> The camera position and zoom level </li>
+ * </ul>
+ * The view can be manipulated (normally by its {@link WorldController}) to
+ * set the camera zoom level, rotation angles, add/remove objects, add event
+ * handlers, get the current camera frustum, and get overall view properties
+ * (in a {@link ViewProperties} object).
  *
  * @author Peter Hollemans
  * @since 0.5
@@ -334,6 +344,7 @@ public class WorldView {
    * Adds an event handler to the group of objects added to the scene via
    * {@link #addObject}.
    *
+   * @param <T> a subtype of Event.
    * @param type the type of the events to receive by the handler.
    * @param handler the handler to register.
    */
@@ -351,6 +362,7 @@ public class WorldView {
   /**
    * Adds an event handler to the scene in general.
    *
+   * @param <T> a subtype of Event.
    * @param type the type of the events to receive by the handler.
    * @param handler the handler to register.
    */

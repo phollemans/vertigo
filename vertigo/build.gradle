@@ -7,6 +7,7 @@
 // ./gradlew -Pplatform=win -Psign media    -- Creates signed Windows installer
 // ./gradlew -Pplatform=mac -Psign media    -- Creates signed MacOS disk image
 // ./gradlew -Pplatform=linux media         -- Creates Linux targz and deb archive
+// ./gradlew javadoc                        -- Creates Javadoc
 
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -119,6 +120,14 @@ tasks.register ('incBuild') {
 
 // MAIN APPLICATION
 
+def build = getBuildNumber()
+version = "${vertigoVersion}.${build}"
+if (!project.hasProperty ('platform')) {
+  ext.platform = getPlatform();
+} // if
+
+println ("Current build is ${version} for ${platform}")
+
 application {
   applicationName = 'vertigo'
   mainModule = 'coastwatch.vertigo'
@@ -143,13 +152,14 @@ compileJava {
   options.release = 14
 }
 
-def build = getBuildNumber()
-version = "${vertigoVersion}.${build}"
-if (!project.hasProperty ('platform')) {
-  ext.platform = getPlatform();
-} // if
-
-println ("Current build is ${version} for ${platform}")
+javadoc {
+  options {
+    links = [
+      'https://docs.oracle.com/en/java/javase/14/docs/api/',
+      'https://openjfx.io/javadoc/14/'
+    ]
+  }
+}
 
 /////////////////////////////////////////////////////////////////
 

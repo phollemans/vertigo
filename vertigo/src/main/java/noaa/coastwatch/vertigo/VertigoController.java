@@ -308,7 +308,11 @@ public class VertigoController {
 
   /////////////////////////////////////////////////////////////////
 
-  /** Opens a browser location. */
+  /**
+   * Opens a browser location.
+   *
+   * @param location the URL location to open.
+   */
   public static void openBrowser (String location) {
 
     try {
@@ -895,6 +899,7 @@ public class VertigoController {
   /**
    * Finds the closest value in a list to a specified value.
    *
+   * @param <T> the type of value in the list.
    * @param itemList the list of items to search.
    * @param value the value to search for.
    * @param func the distance function to compare values.

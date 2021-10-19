@@ -225,15 +225,30 @@ public class WorldController {
     globe = new MeshView (factory.createGeodesicPolyhedron (radius, 3));
     globe.setMaterial (new PhongMaterial (Color.color (0.3, 0.3, 0.3)));
     globe.setViewOrder (BASE_VIEW_ORDER);
+
+
+// DEVMODE
+//globe.setDrawMode (DrawMode.LINE);
+
+
     view.addObject (globe);
     
     LOGGER.fine ("Globe has " +
       (((TriangleMesh) globe.getMesh()).getFaces().size() / 6) + " faces");
 
     // Add some default ambient and point lights
-    AmbientLight ambient = new AmbientLight (Color.color (0.5, 0.5, 0.5));
-//    AmbientLight ambient = new AmbientLight (Color.color (1, 1, 1));
-    PointLight point = new PointLight (Color.color (0.55, 0.55, 0.55));
+
+
+// DEVMODE
+//    AmbientLight ambient = new AmbientLight (Color.color (0.5, 0.5, 0.5));
+    AmbientLight ambient = new AmbientLight (Color.color (1, 1, 1));
+
+
+// DEVMODE
+//    PointLight point = new PointLight (Color.color (0.55, 0.55, 0.55));
+    PointLight point = new PointLight (Color.color (0, 0, 0));
+
+
     point.setTranslateX (-25);
     point.setTranslateY (-25);
     point.setTranslateZ (-50);
@@ -246,6 +261,12 @@ public class WorldController {
     graticule.setMaterial (new PhongMaterial (Color.rgb (255, 213, 63)));
     graticule.setMouseTransparent (true);
     graticule.setViewOrder (FLOAT_VIEW_ORDER);
+
+
+// DEVMODE
+//graticule.setDrawMode (DrawMode.LINE);
+
+
     view.addObject (graticule);
     
     LOGGER.fine ("Graticule has " +

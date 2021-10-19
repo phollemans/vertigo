@@ -1,4 +1,3 @@
-
 /*
  * Vertigo Project
  * Copyright (c) 2020 National Oceanic and Atmospheric Administration

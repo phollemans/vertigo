@@ -28,6 +28,8 @@ public interface Dataset {
    *
    * @return the list of variable names.  The names can be used to retrieve
    * the other information about the variable.
+   *
+   * @throws IOException if an exception occurred.
    */
   List<String> getVariables() throws IOException;
 
@@ -39,6 +41,8 @@ public interface Dataset {
    * @return the list of times.  The index of each time in the list can be
    * used to retrieve variable data values.  The list may have zero length
    * if there are no time steps.
+   *
+   * @throws IOException if an exception occurred.
    */
   List<Date> getTimes (
     String varName
@@ -52,6 +56,8 @@ public interface Dataset {
    * @return the list of level values.  The index of each level in the list
    * can be used to retrieve variable data values.  The list may have zero
    * length if there are no levels.
+   *
+   * @throws IOException if an exception occurred.
    */
   List<Double> getLevels (
     String varName
@@ -60,7 +66,11 @@ public interface Dataset {
   /**
    * Gets the vertical level units for a variable in this dataset.
    *
+   * @param varName the variable to get vertical level units.
+   *
    * @return the vertical level measurement units, or null for none.
+   *
+   * @throws IOException if an exception occurred.
    *
    * @since 0.6
    */
@@ -74,6 +84,8 @@ public interface Dataset {
    * @param varName the variable to get dimensions.
    *
    * @return the dimensions as [width, height].
+   *
+   * @throws IOException if an exception occurred.
    */
   int[] getDimensions (
     String varName
@@ -86,6 +98,8 @@ public interface Dataset {
    * @param varName the variable to get attributes.
    *
    * @return the map of attribute names to values.
+   *
+   * @throws IOException if an exception occurred.
    */
   Map<String, Object> getAttributes (
     String varName
@@ -96,6 +110,8 @@ public interface Dataset {
    * are names and values that describe the dataset as a whole.
    *
    * @return the map of attribute names to values.
+   *
+   * @throws IOException if an exception occurred.
    *
    * @since 0.6
    */
@@ -112,6 +128,8 @@ public interface Dataset {
    * slice or 0 if there are no levels.
    *
    * @return the image data source.
+   *
+   * @throws IOException if an exception occurred.
    */
   ImageDataSource<double[]> getDataSource (
     String varName,
@@ -125,6 +143,8 @@ public interface Dataset {
    * @param varName the variable to get the coordinates.
    *
    * @return the image coordinate source.
+   *
+   * @throws IOException if an exception occurred.
    */
   ImageCoordinateSource getCoordinateSource (
     String varName

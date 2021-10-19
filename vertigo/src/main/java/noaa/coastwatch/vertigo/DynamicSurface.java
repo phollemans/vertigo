@@ -212,6 +212,8 @@ public class DynamicSurface {
    * (if not already) and the current camera position is sent to the facets
    * for an update.  When the state transitions from active to inactive, the
    * facets being updated are stopped.
+   *
+   * @param flag the new active mode value.
    */
   public void setActive (boolean flag) {
 

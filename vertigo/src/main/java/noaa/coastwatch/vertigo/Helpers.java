@@ -16,7 +16,14 @@ import java.util.function.BooleanSupplier;
  */
 public class Helpers {
 
-  /** Returns true if the supplier is not null, and returns true. */
+  /**
+   * Determines if the supplier returns true.
+   *
+   * @param supplier the boolean supplier to check.
+   *
+   * @return true if the supplier is non-null and supplies a true value,
+   * or false otherwise.
+   */
   public static boolean isTrue (BooleanSupplier supplier) {
     return (supplier != null && supplier.getAsBoolean());
   } // isTrue

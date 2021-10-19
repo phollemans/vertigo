@@ -86,7 +86,7 @@ public class DatasetSurfaceFactory extends BaseProjectViewObject implements GeoS
   /**
    * Gets the legend factory used to create legends for surfaces.
    *
-   * @param legendFactory the legend factory property.
+   * @return the legend factory property.
    *
    * @since 0.6
    */

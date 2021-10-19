@@ -77,6 +77,8 @@ public class EllipsoidMercator extends ProjectionImpl {
    * @param earthRadius the earth radius for the sphere in meters or Double.NaN for an ellipsoid.
    * If not specified, the semi-major and semi-minor axes must be specified.
    * @param units the units to use for XY projection point coordinate values.
+   *
+   * @return the instance of the Mercator projection object.
    */
   public static EllipsoidMercator getInstance (
     double longitudeOrigin,

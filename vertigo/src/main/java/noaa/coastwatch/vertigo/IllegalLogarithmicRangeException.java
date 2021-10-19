@@ -7,7 +7,7 @@
 package noaa.coastwatch.vertigo;
 
 /**
- * The <code>IllegalLogarithmicRangeException<code> class is used for exceptions
+ * The <code>IllegalLogarithmicRangeException</code> class is used for exceptions
  * thrown by {@link LogarithmicAxis} when a bound value isn't supported by the axis.
  * The code was accessed on Oct 10, 2020 from the
  * <a href="http://blog.dooapp.com/2013/06/logarithmic-scale-strikes-back-in.html">doapp.com</a>
@@ -20,11 +20,15 @@ package noaa.coastwatch.vertigo;
 public class IllegalLogarithmicRangeException extends Exception {
 
 	/**
-	 * @param string
+   * Creates a new range exception.
+   *
+	 * @param message the exception message.
 	 */
-	public IllegalLogarithmicRangeException(String message) {
-		super(message);
-	}
+	public IllegalLogarithmicRangeException (String message) {
+
+		super (message);
+
+	} // IllegalLogarithmicRangeException
 
 }
 

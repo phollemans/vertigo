@@ -64,7 +64,7 @@ public class WebMapSurfaceFactory extends BaseProjectViewObject implements GeoSu
   /**
    * Creates a new surface factory.
    *
-   * @param webmap the WebMap to use for retrieving data and coordinates.
+   * @param webmap the web map to use for retrieving data and coordinates.
    * @param viewContext the view context for the surfaces created by the factory.
    */
   public WebMapSurfaceFactory (

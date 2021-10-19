@@ -10,6 +10,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.beans.binding.DoubleBinding;
@@ -21,7 +22,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Side;
 
 /**
- * The <code>LogarithmicAxis<code> class displays a base 10 logarithmic axis
+ * The <code>LogarithmicAxis</code> class displays a base 10 logarithmic axis
  * for JavaFX charts.  The code is based on original code by Kevin Senechal
  * with modifications by Vadim Levit and Benny Lutati.
  *
@@ -139,7 +140,7 @@ public class LogarithmicAxis extends ValueAxis<Number> {
      * implementation is to return an array of the lowerBound and upperBound
      * properties defined into the ValueAxis class.
      *
-     * @return
+     * @return the current axis range.
      */
     @Override
     protected double[] getRange() {
@@ -154,8 +155,8 @@ public class LogarithmicAxis extends ValueAxis<Number> {
      * that will be displayed under the tickMark. Here I choose to use a number
      * formatter.
      *
-     * @param value
-     * @return
+     * @param value the value to format.
+     * @return the tick mark label.
      */
     @Override
     protected String getTickMarkLabel(Number value) {
@@ -171,8 +172,8 @@ public class LogarithmicAxis extends ValueAxis<Number> {
      * simplest case is to set the lower and upper bound properties directly
      * with the new values.
      *
-     * @param range
-     * @param animate
+     * @param range the new axis range.
+     * @param animate the animation flag, ignored.
      */
     @Override
     protected void setRange(Object range, boolean animate) {
@@ -214,8 +215,8 @@ public class LogarithmicAxis extends ValueAxis<Number> {
      * We are almost done but we forgot to override 2 important methods that are
      * used to perform the matching between data and the axis (and the reverse).
      *
-     * @param displayPosition
-     * @return
+     * @param displayPosition the position along the axis.
+     * @return the axis value.
      */
     @Override
     public Number getValueForDisplay(double displayPosition) {

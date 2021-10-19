@@ -229,6 +229,7 @@ public class Project {
    * Gets a list of objects of a specified type from the collection of
    * objects contained in this project.
    *
+   * @param <T> the type of project object.
    * @param objectClass the class of project objects to retrieve.
    *
    * @return the list of objects, possibly zero length if the project
@@ -254,6 +255,7 @@ public class Project {
    * Gets an object of a specified type and name from the collection of
    * objects contained in this project.
    *
+   * @param <T> the type of project object.
    * @param objectClass the class of project object to retrieve.
    * @param name the name of the object.
    *
@@ -279,6 +281,7 @@ public class Project {
    * Gets a list of object names of a specified type from the collection of
    * objects contained in this project.
    *
+   * @param <T> the type of project object.
    * @param objectClass the class of project object names to retrieve.
    *
    * @return the list of object names, possibly zero length if the project
