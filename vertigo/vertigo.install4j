@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.11" transformSequenceNumber="8">
-  <directoryPresets config="../../Terrenus/Code Signing/Microsoft Authenticode/DigiCert/Terrenus_Microsoft_Certificates_Mar_31_2021.pfx" />
   <application name="Vertigo" applicationId="8938-5182-3607-0111" shortName="vertigo" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="0.7.40" allPathsRelative="true" macVolumeId="2ad2589a68244318" javaMinVersion="14">
     <variables>
       <variable name="macKeystoreFile" />
