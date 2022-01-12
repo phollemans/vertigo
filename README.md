@@ -20,10 +20,12 @@ Pre-compiled installable packages are available for Windows, Mac, and Linux:
 
 | Operating System | MD5 Code |
 | :--- | :--- |
-| [Windows](http://terrenus.ca/download/vertigo/0.6/vertigo_windows-x64_0_6.exe) | eb5457ff92450e4ec2f563d2f32ab3d1 |
-| [macOS](http://terrenus.ca/download/vertigo/0.6/vertigo_macos_0_6.dmg) | 19cc5f9e758c916e7fb47bed55e63775 |
-| [Linux (tar.gz)](http://terrenus.ca/download/vertigo/0.6/vertigo_linux_0_6.tar.gz) | 8c2a79f0555261eef3229678c3b5f418 |
-| [Linux (deb)](http://terrenus.ca/download/vertigo/0.6/vertigo_linux_0_6.deb) | d2dc78f969aa8dfad96339739869ee79 |
+| [Windows](http://terrenus.ca/download/vertigo/0.7/vertigo_windows-x64_0_7_556.exe) | 3ee5362e2d2721bbdaf77fc2218a5196 |
+| [macOS](http://terrenus.ca/download/vertigo/0.7/vertigo_macos_0_7_556.dmg) | 36240fdc91d11d41baf651a5d5aea936 |
+| [Linux (tar.gz)](http://terrenus.ca/download/vertigo/0.7/vertigo_linux_0_7_556.tar.gz) | dff704f5c19484c7b889d2d384689bc1 |
+| [Linux (deb)](http://terrenus.ca/download/vertigo/0.7/vertigo_linux_0_7_556.deb) | 7729c91c387d4202f7b2a99e64c1294a |
+
+Previous versions are also available in the [archive](http://terrenus.ca/download/vertigo).
 
 # Videos 
 
