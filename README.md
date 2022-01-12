@@ -16,7 +16,7 @@ and use earth science data that is easy and intuitive.
 
 # Packages
 
-Pre-compiled installable packages are available for Windows, Mac, and Linux:
+Pre-compiled installable packages for version 0.7 are available for Windows, Mac, and Linux:
 
 | Operating System | MD5 Code |
 | :--- | :--- |
@@ -29,7 +29,7 @@ Previous versions are also available in the [archive](http://terrenus.ca/downloa
 
 # Videos 
 
-The YouTube [CoastWatch Vertigo Project](https://www.youtube.com/watch?v=2s9bBA925jM&list=PL_-bsOLKMYJxlOTJn6E_EUvjBJtSwzYir&index=1) playlist contains videos 
+The YouTube [CoastWatch Vertigo Project](https://www.youtube.com/playlist?list=PL_-bsOLKMYJxlOTJn6E_EUvjBJtSwzYir) playlist contains videos 
 on installing and using Vertigo to view data, and on Vertigo development.
 
 # Running
