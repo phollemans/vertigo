@@ -26,9 +26,6 @@ package noaa.coastwatch.vertigo;
  */
 public class ViewProperties {
 
-  /** The dots-per-inch screen resolution being used (may or may not match actual DPI). */
-  public int dpi;
-
   /** The view resolution in the vertical direction in pixels. */
   public int vres;
   

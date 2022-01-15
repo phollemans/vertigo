@@ -478,21 +478,19 @@ public class WorldView {
 
     ViewProperties props = new ViewProperties();
 
-    // Detect the screen that data is going to be displayed on.  Note that
-    // some displays return a DPI of 0, so we insert a reasonable guess here.
+    // Detect the screen that data is going to be displayed on.
     var screen = Screen.getPrimary();
     var bounds = screen.getBounds();
     int width = (int) bounds.getWidth();
     int height = (int) bounds.getHeight();
-    String dpiProp = System.getProperty ("dpi");
-    int dpi = (dpiProp != null ? Integer.parseInt (dpiProp) : (int) screen.getDpi());
-    if (dpi == 0 || dpi > 800) dpi = 80;
-    LOGGER.fine ("Detected display of dimensions " + width + "x" + height + " at " + dpi + " DPI");
-    props.dpi = dpi;
+    double scaleY = screen.getOutputScaleY();
+    int scalePercent = (int) (scaleY*100);
+
+    LOGGER.fine ("Detected display of dimensions " + width + "x" + height + " at " + scalePercent + "% scaling");
 
     // We compute an approximate vertical resolution here, assuming the
     // view takes up half the screen.
-    props.vres = (int) Math.round ((height/2.0)*(dpi/80.0));
+    props.vres = (int) Math.round (height*scaleY/2.0);
 
     // Make it so that the accuracy of the model is such that it's at most
     // 4 pixels from the exact value.

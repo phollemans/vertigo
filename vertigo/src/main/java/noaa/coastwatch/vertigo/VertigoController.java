@@ -1457,13 +1457,15 @@ public class VertigoController {
       var fxVersion = System.getProperty ("javafx.runtime.version");
 
       var maxMemory = Runtime.getRuntime().maxMemory()/1024/1024 + " MB";
-
-      var displayRes = worldController.getView().getProperties().dpi + " DPI";
+      int threads = Runtime.getRuntime().availableProcessors();
+      
       var screen = Screen.getPrimary();
       var bounds = screen.getBounds();
       int width = (int) bounds.getWidth();
       int height = (int) bounds.getHeight();
       var displaySize = width + "x" + height;
+      double scaleY = screen.getOutputScaleY();
+      int scalePercent = (int) (scaleY*100);
 
       var mdText =
         "**Vertigo Project** | " + vertigoVersion + "." + vertigoBuildNum + "\n" +
@@ -1473,8 +1475,8 @@ public class VertigoController {
         "**Operating System** | " + osName + " (" + osVersion + ") " + osArch + "\n" +
         "**JavaFX Runtime** | " + fxVersion + "\n" +
         "**Maximum Memory** | " + maxMemory + "\n" +
-        "**Display Resolution** | " + displayRes + "\n" +
-        "**Display Size** | " + displaySize + "\n" +
+        "**Processor Threads** | " + threads + "\n" +
+        "**Display Size** | " + displaySize + " at " + scalePercent + "% scaling\n" +
         "**Open-Source Components** | OpenJFX (openjfx.io)\n" +
         " &nbsp; | CommonMark (commonmark.org)\n" +
         " &nbsp; | jsoup (jsoup.org)\n" +
