@@ -1,5 +1,5 @@
-Vertigo Project v0.7 beta\
-Copyright (c) 2020 National Oceanic and Atmospheric Administration\
+Vertigo Project 0.8-beta\
+Copyright (c) 2022 National Oceanic and Atmospheric Administration\
 All rights reserved\
 Author: Peter Hollemans
 
@@ -67,6 +67,7 @@ including:
 * Verification of rendering with different data projections
 * Multiple datasets rendered on top of one another
 * THREDDS data discovery and catalog search
+* Extraction of time series of point data
 * Creation and saving of animations to MP4 and GIF files
 
 ## Source Code
@@ -83,5 +84,5 @@ for Windows, Mac, and Linux.
 Please direct feedback to `peter@terrenus.ca` and `coastwatch.info@noaa.gov`.
 
 ---
-Last updated: Dec 30, 2020
+Last updated: Jan 13, 2022
 
