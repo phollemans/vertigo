@@ -16,16 +16,9 @@ and use earth science data that is easy and intuitive.
 
 # Packages
 
-Pre-compiled installable packages for version 0.7 are available for Windows, Mac, and Linux:
-
-| Operating System | MD5 Code |
-| :--- | :--- |
-| [Windows](http://terrenus.ca/download/vertigo/0.7/vertigo_windows-x64_0_7_556.exe) | 3ee5362e2d2721bbdaf77fc2218a5196 |
-| [macOS](http://terrenus.ca/download/vertigo/0.7/vertigo_macos_0_7_556.dmg) | 36240fdc91d11d41baf651a5d5aea936 |
-| [Linux (tar.gz)](http://terrenus.ca/download/vertigo/0.7/vertigo_linux_0_7_556.tar.gz) | dff704f5c19484c7b889d2d384689bc1 |
-| [Linux (deb)](http://terrenus.ca/download/vertigo/0.7/vertigo_linux_0_7_556.deb) | 7729c91c387d4202f7b2a99e64c1294a |
-
-Previous versions are also available in the [archive](http://terrenus.ca/download/vertigo).
+Pre-compiled installable packages starting with version 0.7 are available for 
+Windows, Mac, and Linux under [Releases](https://github.com/phollemans/vertigo/releases).  
+Packages are also available from the Terrenus [archive](http://terrenus.ca/download/vertigo).
 
 # Videos 
 
