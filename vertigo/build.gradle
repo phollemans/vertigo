@@ -26,15 +26,12 @@ plugins {
 ext {
 
   // Set major version number
-  vertigoVersion = '0.7'
+  vertigoVersion = '0.8'
 
   // Set other version numbers
   netcdfJavaVersion = '5.4.1'
   slf4jVersion = '1.7.9'
   javafxVersion = '14.0.2.1'
-
-  // Set other parameters
-  displayDpi = '80'
 
   // Gets the current platform running the build, either 'win', 'linux',
   // or 'mac'.
@@ -133,7 +130,6 @@ application {
   mainModule = 'coastwatch.vertigo'
   mainClass = 'noaa.coastwatch.vertigo.Vertigo'
   applicationDefaultJvmArgs = [
-    "-Ddpi=${displayDpi}",
     '-Dvertigo.devel.mode=true',
     '-Dprism.lcdtext=false',
     '-Djava.util.logging.config.class=noaa.coastwatch.vertigo.LoggingConfig'
