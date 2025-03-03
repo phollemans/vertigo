@@ -18,7 +18,7 @@ and use earth science data that is easy and intuitive.
 
 Pre-compiled installable packages starting with version 0.7 are available for 
 Windows, Mac, and Linux under [Releases](https://github.com/phollemans/vertigo/releases). Packages are also 
-available from the Terrenus [archive](https://terrenus-storage.s3.amazonaws.com/vertigo).
+available from the Terrenus [archive](https://terrenus-storage.s3.amazonaws.com/index.html#vertigo/).
 
 # Videos 
 
