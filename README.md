@@ -7,12 +7,12 @@ and use earth science data that is easy and intuitive.
 
 # Screenshots
 
-![Vertigo Screenshot - Chlorophyll](http://terrenus.ca/download/vertigo/0.6/screenshot_01.png)
-![Vertigo Screenshot - Air Temperature](http://terrenus.ca/download/vertigo/0.6/screenshot_02.png)
-![Vertigo Screenshot - True Color](http://terrenus.ca/download/vertigo/0.6/screenshot_03.png)
-![Vertigo Screenshot - Geo Color](http://terrenus.ca/download/vertigo/0.6/screenshot_04.png)
-![Vertigo Screenshot - Sea Surface Temperature](http://terrenus.ca/download/vertigo/0.6/screenshot_05.png)
-![Vertigo Screenshot - Ice Cover](http://terrenus.ca/download/vertigo/0.6/screenshot_06.png)
+![Vertigo Screenshot - Chlorophyll](https://terrenus-storage.s3.amazonaws.com/vertigo/0.6/screenshot_01.png)
+![Vertigo Screenshot - Air Temperature](https://terrenus-storage.s3.amazonaws.com/vertigo/0.6/screenshot_02.png)
+![Vertigo Screenshot - True Color](https://terrenus-storage.s3.amazonaws.com/vertigo/0.6/screenshot_03.png)
+![Vertigo Screenshot - Geo Color](https://terrenus-storage.s3.amazonaws.com/vertigo/0.6/screenshot_04.png)
+![Vertigo Screenshot - Sea Surface Temperature](https://terrenus-storage.s3.amazonaws.com/vertigo/0.6/screenshot_05.png)
+![Vertigo Screenshot - Ice Cover](https://terrenus-storage.s3.amazonaws.com/vertigo/0.6/screenshot_06.png)
 
 # Packages
 
